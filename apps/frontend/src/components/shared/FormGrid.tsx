@@ -73,17 +73,18 @@ export function FormGrid<T extends { id?: string }>({
     width: showEditButton && showRemoveButton ? 88 : 44,
     fixed: 'right',
     render: (_: unknown, record: T) => (
-      <Space size={0}>
+      <div style={{display: "flex", gap: 10}} >
         {showEditButton && (
-          <EditButton onClick={() => onEdit?.(record)} />
+          <EditButton showLabel={false} onClick={() => onEdit?.(record)} />
         )}
         {showRemoveButton && (
           <RemoveButton
+            showLabel={false}
             confirmTitle={deleteConfirmTitle}
             onClick={() => onRemove?.(record)}
           />
         )}
-      </Space>
+      </div>
     ),
   };
 
