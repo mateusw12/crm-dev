@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Form, Input, Select, App } from "antd";
+import { Form, Input, Select } from "antd";
 import { useTranslations } from "next-intl";
 import useSWR from "swr";
 import type { GroupResponse, UserResponse } from "@/lib/dto";
@@ -9,6 +9,8 @@ import { GroupsService } from "@/lib/services/groups.service";
 import { UsersService } from "@/lib/services/users.service";
 import { AuthService } from "@/lib/services/auth.service";
 import { Modal } from "@/components/shared/modal/Modal";
+import { showSuccess, showUpdate } from "@/components/shared/notification/notificationService";
+import { handleApiError } from "@/lib/api";
 
 interface GroupModalProps {
   open: boolean;
@@ -29,7 +31,6 @@ export function GroupModal({
   const [form] = Form.useForm();
   const tCommon = useTranslations("common");
   const t = useTranslations("groups");
-  const { message } = App.useApp();
   const [selectedMembers, setSelectedMembers] = useState<string[]>([]);
 
   const { data: users = [] } = useSWR<UserResponse[]>(
@@ -63,6 +64,7 @@ export function GroupModal({
 
       if (group) {
         savedGroup = await GroupsService.update(group.id, values);
+        showUpdate();
 
         // Sync members: add new ones, remove removed ones
         const { toAdd, toRemove } = getMembershipChanges(
@@ -78,6 +80,7 @@ export function GroupModal({
         ]);
       } else {
         savedGroup = await GroupsService.create(values);
+        showSuccess();
         // Add all selected members — guard against non-UUID values
         const validMembers = selectedMembers.filter((id) =>
           UUID_REGEX.test(id),
@@ -89,11 +92,10 @@ export function GroupModal({
         );
       }
 
-      message.success(tCommon("success"));
       onSuccess();
     } catch (error: any) {
       if (error?.errorFields) return;
-      message.error(error?.message ?? tCommon("error"));
+      handleApiError(error);
     }
   };
 

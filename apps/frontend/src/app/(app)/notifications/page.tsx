@@ -9,7 +9,6 @@ import {
   Spin,
   Tag,
   Typography,
-  App,
 } from 'antd';
 import { BellOutlined, CheckOutlined } from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
@@ -17,12 +16,12 @@ import useSWR from 'swr';
 import type { NotificationResponse } from '@/lib/dto';
 import { formatDistanceToNow } from 'date-fns';
 import { NotificationsService } from '@/lib/services/index';
+import { showSuccess } from '@/components/shared/notification/notificationService';
 
 const { Title, Text } = Typography;
 
 export default function NotificationsPage() {
   const tCommon = useTranslations('common');
-  const { message } = App.useApp();
 
   const { data: notifications = [], isLoading, mutate } = useSWR<NotificationResponse[]>(
     'notifications-page',
@@ -36,7 +35,7 @@ export default function NotificationsPage() {
 
   const handleMarkAllRead = async () => {
     await NotificationsService.markAllRead();
-    message.success(tCommon('success'));
+    showSuccess();
     mutate();
   };
 

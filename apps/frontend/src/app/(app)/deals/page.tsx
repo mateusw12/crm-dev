@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Typography, App, Spin } from "antd";
+import { Button, Typography, Spin } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
 import { useTranslations } from "next-intl";
 import useSWR from "swr";
@@ -20,6 +20,7 @@ import { KanbanColumn } from "@/components/deals/KanbanColumn";
 import { KanbanCard } from "@/components/deals/KanbanCard";
 import { DealModal } from "@/components/deals/DealModal";
 import { DealsService } from "@/lib/services/index";
+import { handleApiError } from "@/lib/api";
 
 const { Title } = Typography;
 
@@ -43,7 +44,6 @@ const STATUS_COLORS: Record<DealStatus, string> = {
 
 export default function DealsPage() {
   const t = useTranslations("deals");
-  const { message } = App.useApp();
   const [modalOpen, setModalOpen] = useState(false);
   const [editingDeal, setEditingDeal] = useState<DealResponse | null>(null);
   const [activeDeal, setActiveDeal] = useState<DealResponse | null>(null);
@@ -83,8 +83,8 @@ export default function DealsPage() {
     try {
       await DealsService.update(dealId, { status: newStatus });
       mutate();
-    } catch {
-      message.error("Failed to update deal status");
+    } catch (error) {
+      handleApiError(error);
       mutate();
     }
   };

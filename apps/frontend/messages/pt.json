@@ -150,5 +150,31 @@
       "MANAGER": "Gerente",
       "ADMIN": "Administrador"
     }
+  },
+  "notifications": {
+    "successTitle": "Sucesso",
+    "updateTitle": "Atualizado",
+    "errorTitle": "Erro"
+  },
+  "errors": {
+    "default": "Ocorreu um erro. Por favor, tente novamente.",
+    "companyNotFound": "Empresa não encontrada",
+    "contactNotFound": "Contato não encontrado",
+    "taskNotFound": "Tarefa não encontrada",
+    "groupNotFound": "Grupo não encontrado",
+    "dealNotFound": "Negócio não encontrado",
+    "interactionNotFound": "Interação não encontrada",
+    "userNotFound": "Usuário não encontrado",
+    "cnpjDuplicate": "Já existe uma empresa com este CNPJ",
+    "accessDenied": "Acesso negado",
+    "insufficientPermissions": "Permissões insuficientes",
+    "managerOrAdminRequired": "Apenas gerentes e administradores podem realizar esta ação",
+    "cepInvalidLength": "CEP deve ter 8 dígitos",
+    "cepNotFound": "CEP não encontrado",
+    "cnpjInvalidLength": "CNPJ deve ter 14 dígitos",
+    "cnpjNotFound": "CNPJ não encontrado ou inválido",
+    "invalidToken": "Sessão inválida ou expirada",
+    "cannotUpdateOtherUsers": "Você não pode atualizar outros usuários",
+    "onlyAdminsCanDelete": "Apenas administradores podem excluir usuários"
   }
 }

@@ -6,7 +6,6 @@ import {
   Space,
   Tag,
   Typography,
-  App,
   Avatar,
 } from 'antd';
 import { useTranslations } from 'next-intl';
@@ -16,13 +15,14 @@ import type { ContactResponse } from '@/lib/dto';
 import { ContactModal } from '@/components/contacts/ContactModal';
 import { ContactsService } from '@/lib/services/index';
 import { FormGrid } from '@/components/shared/FormGrid';
+import { showSuccess } from '@/components/shared/notification/notificationService';
+import { handleApiError } from '@/lib/api';
 
 const { Title } = Typography;
 
 export default function ContactsPage() {
   const t = useTranslations('contacts');
   const tCommon = useTranslations('common');
-  const { message } = App.useApp();
   const router = useRouter();
 
   const [page, setPage] = useState(1);
@@ -38,10 +38,10 @@ export default function ContactsPage() {
   const handleDelete = async (record: ContactResponse) => {
     try {
       await ContactsService.delete(record.id);
-      message.success(tCommon('success'));
+      showSuccess();
       mutate();
-    } catch {
-      message.error(tCommon('error'));
+    } catch (error) {
+      handleApiError(error);
     }
   };
 

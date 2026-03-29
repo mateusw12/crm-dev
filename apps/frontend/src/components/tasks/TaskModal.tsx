@@ -1,13 +1,15 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Form, Input, Select, DatePicker, App } from 'antd';
+import { Form, Input, Select, DatePicker } from 'antd';
 import { useTranslations } from 'next-intl';
 import useSWR from 'swr';
 import dayjs from 'dayjs';
 import type { TaskResponse } from '@/lib/dto';
 import { ContactsService, DealsService, TasksService } from '@/lib/services/index';
 import { Modal } from '@/components/shared/modal/Modal';
+import { showSuccess, showUpdate } from '@/components/shared/notification/notificationService';
+import { handleApiError } from '@/lib/api';
 
 interface TaskModalProps {
   open: boolean;
@@ -20,7 +22,6 @@ export function TaskModal({ open, task, onClose, onSuccess }: TaskModalProps) {
   const [form] = Form.useForm();
   const tCommon = useTranslations('common');
   const t = useTranslations('tasks');
-  const { message } = App.useApp();
 
   const { data: contacts } = useSWR('contacts-form', () =>
     ContactsService.getAll({ limit: 200 }).then((r) => r.data),
@@ -54,14 +55,15 @@ export function TaskModal({ open, task, onClose, onSuccess }: TaskModalProps) {
       };
       if (task) {
         await TasksService.update(task.id, payload);
+        showUpdate();
       } else {
         await TasksService.create(payload);
+        showSuccess();
       }
-      message.success(tCommon('success'));
       onSuccess();
     } catch (error: any) {
       if (error?.errorFields) return;
-      message.error(error?.message ?? tCommon('error'));
+      handleApiError(error);
     }
   };
 

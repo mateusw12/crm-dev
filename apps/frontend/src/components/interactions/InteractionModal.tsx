@@ -1,12 +1,14 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Form, Input, Select, DatePicker, App } from 'antd';
+import { Form, Input, Select, DatePicker } from 'antd';
 import { useTranslations } from 'next-intl';
 import dayjs from 'dayjs';
 import type { InteractionResponse } from '@/lib/dto';
 import { InteractionsService } from '@/lib/services/index';
 import { Modal } from '@/components/shared/modal/Modal';
+import { showSuccess, showUpdate } from '@/components/shared/notification/notificationService';
+import { handleApiError } from '@/lib/api';
 
 interface InteractionModalProps {
   open: boolean;
@@ -28,7 +30,6 @@ export function InteractionModal({
   const [form] = Form.useForm();
   const tCommon = useTranslations('common');
   const t = useTranslations('interactions');
-  const { message } = App.useApp();
 
   useEffect(() => {
     if (open) {
@@ -55,14 +56,15 @@ export function InteractionModal({
       };
       if (interaction) {
         await InteractionsService.update(interaction.id, payload);
+        showUpdate();
       } else {
         await InteractionsService.create(payload);
+        showSuccess();
       }
-      message.success(tCommon('success'));
       onSuccess();
     } catch (error: any) {
       if (error?.errorFields) return;
-      message.error(error?.message ?? tCommon('error'));
+      handleApiError(error);
     }
   };
 

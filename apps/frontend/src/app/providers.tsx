@@ -7,6 +7,7 @@ import { NextIntlClientProvider } from 'next-intl';
 import type { AbstractIntlMessages } from 'next-intl';
 import type { ReactNode } from 'react';
 import { ConfirmProvider } from '@/components/shared/confirm/ConfirmProvider';
+import { NotificationProvider } from '@/components/shared/notification/NotificationProvider';
 
 interface ProvidersProps {
   children: ReactNode;
@@ -35,7 +36,9 @@ export function Providers({ children, messages, locale }: ProvidersProps) {
             }}
           >
             <App>
-              <ConfirmProvider>{children}</ConfirmProvider>
+              <NotificationProvider>
+                <ConfirmProvider>{children}</ConfirmProvider>
+              </NotificationProvider>
             </App>
           </ConfigProvider>
         </AntdRegistry>

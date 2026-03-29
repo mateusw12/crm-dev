@@ -150,5 +150,31 @@
       "MANAGER": "Manager",
       "ADMIN": "Admin"
     }
+  },
+  "notifications": {
+    "successTitle": "Success",
+    "updateTitle": "Updated",
+    "errorTitle": "Error"
+  },
+  "errors": {
+    "default": "An error occurred. Please try again.",
+    "companyNotFound": "Company not found",
+    "contactNotFound": "Contact not found",
+    "taskNotFound": "Task not found",
+    "groupNotFound": "Group not found",
+    "dealNotFound": "Deal not found",
+    "interactionNotFound": "Interaction not found",
+    "userNotFound": "User not found",
+    "cnpjDuplicate": "A company with this CNPJ already exists",
+    "accessDenied": "Access denied",
+    "insufficientPermissions": "Insufficient permissions",
+    "managerOrAdminRequired": "Only managers and admins can perform this action",
+    "cepInvalidLength": "ZIP code must have 8 digits",
+    "cepNotFound": "ZIP code not found",
+    "cnpjInvalidLength": "CNPJ must have 14 digits",
+    "cnpjNotFound": "CNPJ not found or invalid",
+    "invalidToken": "Invalid or expired session",
+    "cannotUpdateOtherUsers": "You cannot update other users",
+    "onlyAdminsCanDelete": "Only admins can delete users"
   }
 }

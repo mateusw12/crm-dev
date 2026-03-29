@@ -1,13 +1,15 @@
 'use client';
 
 import { useEffect } from 'react';
-import { Form, Input, Select, App } from 'antd';
+import { Form, Input, Select } from 'antd';
 import { useTranslations } from 'next-intl';
 import useSWR from 'swr';
 import type { ContactResponse } from '@/lib/dto';
 import { CompaniesService } from '@/lib/services/companies.service';
 import { ContactsService } from '@/lib/services/contacts.service';
 import { Modal } from '@/components/shared/modal/Modal';
+import { showSuccess, showUpdate } from '@/components/shared/notification/notificationService';
+import { handleApiError } from '@/lib/api';
 
 interface ContactModalProps {
   open: boolean;
@@ -20,7 +22,6 @@ export function ContactModal({ open, contact, onClose, onSuccess }: ContactModal
   const [form] = Form.useForm();
   const tCommon = useTranslations('common');
   const t = useTranslations('contacts');
-  const { message } = App.useApp();
 
   const { data: companies } = useSWR('companies', () => CompaniesService.getAll());
 
@@ -45,14 +46,15 @@ export function ContactModal({ open, contact, onClose, onSuccess }: ContactModal
       const values = await form.validateFields();
       if (contact) {
         await ContactsService.update(contact.id, values);
+        showUpdate();
       } else {
         await ContactsService.create(values);
+        showSuccess();
       }
-      message.success(tCommon('success'));
       onSuccess();
     } catch (error: any) {
       if (error?.errorFields) return;
-      message.error(error?.message ?? tCommon('error'));
+      handleApiError(error);
     }
   };
 

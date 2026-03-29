@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Typography, App } from 'antd';
+import { Typography } from 'antd';
 import type { TableColumnsType } from 'antd';
 import { useTranslations } from 'next-intl';
 import useSWR from 'swr';
@@ -9,11 +9,12 @@ import type { CompanyResponse } from '@/lib/dto';
 import { CompanyModal } from '@/components/companies/CompanyModal';
 import { CompaniesService } from '@/lib/services/index';
 import { FormGrid } from '@/components/shared/FormGrid';
+import { showSuccess } from '@/components/shared/notification/notificationService';
+import { handleApiError } from '@/lib/api';
 
 export default function CompaniesPage() {
   const t = useTranslations('companies');
   const tCommon = useTranslations('common');
-  const { message } = App.useApp();
   const [modalOpen, setModalOpen] = useState(false);
   const [editingCompany, setEditingCompany] = useState<CompanyResponse | null>(null);
   const [page, setPage] = useState(1);
@@ -27,10 +28,10 @@ export default function CompaniesPage() {
   const handleRemove = async (record: CompanyResponse) => {
     try {
       await CompaniesService.delete(record.id);
-      message.success(tCommon('success'));
+      showSuccess();
       mutate();
-    } catch {
-      message.error(tCommon('error'));
+    } catch (error) {
+      handleApiError(error);
     }
   };
 

@@ -1,7 +1,7 @@
 ﻿"use client";
 
 import { useState } from "react";
-import { Tag, Checkbox, App, Select } from "antd";
+import { Tag, Checkbox, Select } from "antd";
 import type { TableColumnsType } from "antd";
 import { useTranslations } from "next-intl";
 import useSWR from "swr";
@@ -11,11 +11,12 @@ import { TaskModal } from "@/components/tasks/TaskModal";
 import { format } from "date-fns";
 import { TasksService } from "@/lib/services/index";
 import { FormGrid } from "@/components/shared/FormGrid";
+import { showSuccess } from "@/components/shared/notification/notificationService";
+import { handleApiError } from "@/lib/api";
 
 export default function TasksPage() {
   const t = useTranslations("tasks");
   const tCommon = useTranslations("common");
-  const { message } = App.useApp();
   const [status, setStatus] = useState<TaskStatus | undefined>();
   const [page, setPage] = useState(1);
   const [modalOpen, setModalOpen] = useState(false);
@@ -30,10 +31,10 @@ export default function TasksPage() {
   const handleRemove = async (record: TaskResponse) => {
     try {
       await TasksService.delete(record.id);
-      message.success(tCommon("success"));
+      showSuccess();
       mutate();
-    } catch {
-      message.error(tCommon("error"));
+    } catch (error) {
+      handleApiError(error);
     }
   };
 
@@ -43,8 +44,8 @@ export default function TasksPage() {
     try {
       await TasksService.update(task.id, { status: newStatus });
       mutate();
-    } catch {
-      message.error(tCommon("error"));
+    } catch (error) {
+      handleApiError(error);
     }
   };
 

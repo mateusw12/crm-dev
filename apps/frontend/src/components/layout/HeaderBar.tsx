@@ -13,7 +13,7 @@ import { useRouter } from "next/navigation";
 import { signOut, useSession } from "next-auth/react";
 import useSWR from "swr";
 import { useTranslations } from "next-intl";
-import { changeLocale } from "@/lib/locale/changeLocale";
+import { changeLocale } from "@/lib/api/changeLocale";
 import { NotificationsService } from "@/lib/services/index";
 
 const { Text } = Typography;

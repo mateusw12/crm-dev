@@ -1,13 +1,15 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
-import { Form, Input, App, Row, Col, Spin } from 'antd';
+import { Form, Input, Row, Col, Spin } from 'antd';
 import { useTranslations } from 'next-intl';
 import type { CompanyResponse } from '@/lib/dto';
 import { CompaniesService } from '@/lib/services/index';
 import { Modal } from '@/components/shared/modal/Modal';
 import { isValidCnpj, maskCnpj, cleanCnpj } from '@/utils/cnpj';
 import { maskCep, cleanCep, isValidCep } from '@/utils/cep';
+import { showSuccess, showUpdate } from '@/components/shared/notification/notificationService';
+import { handleApiError } from '@/lib/api';
 
 interface CompanyModalProps {
   open: boolean;
@@ -16,13 +18,10 @@ interface CompanyModalProps {
   onSuccess: () => void;
 }
 
-// ---------- component ----------
-
 export function CompanyModal({ open, company, onClose, onSuccess }: CompanyModalProps) {
   const [form] = Form.useForm();
   const tCommon = useTranslations('common');
   const t = useTranslations('companies');
-  const { message } = App.useApp();
   const [cepLoading, setCepLoading] = useState(false);
   const cepAbortRef = useRef<AbortController | null>(null);
 
@@ -71,19 +70,19 @@ export function CompanyModal({ open, company, onClose, onSuccess }: CompanyModal
       };
       if (company) {
         await CompaniesService.update(company.id, payload);
+        showUpdate();
       } else {
         await CompaniesService.create(payload);
+        showSuccess();
       }
-      message.success(tCommon('success'));
       onSuccess();
     } catch (error: any) {
       if (error?.errorFields) return;
-      const msg: string = error?.message ?? tCommon('error');
-      // Show duplicate CNPJ as a field error instead of a generic toast
-      if (msg.toLowerCase().includes('cnpj')) {
+      // Show duplicate CNPJ as a field error instead of a generic notification
+      if (error?.message === 'error.cnpjDuplicate') {
         form.setFields([{ name: 'cnpj', errors: [t('cnpjDuplicate')] }]);
       } else {
-        message.error(msg);
+        handleApiError(error);
       }
     }
   };

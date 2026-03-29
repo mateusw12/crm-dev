@@ -5,16 +5,16 @@ import { Tag, Avatar, Space, Typography } from 'antd';
 import type { TableColumnsType } from 'antd';
 import { useTranslations } from 'next-intl';
 import useSWR from 'swr';
-import { App } from 'antd';
 import type { GroupResponse } from '@/lib/dto';
 import { GroupModal } from '@/components/groups/GroupModal';
 import { GroupsService } from '@/lib/services/groups.service';
 import { FormGrid } from '@/components/shared/FormGrid';
+import { showSuccess } from '@/components/shared/notification/notificationService';
+import { handleApiError } from '@/lib/api';
 
 export default function GroupsPage() {
   const t = useTranslations('groups');
   const tCommon = useTranslations('common');
-  const { message } = App.useApp();
   const [modalOpen, setModalOpen] = useState(false);
   const [editingGroup, setEditingGroup] = useState<GroupResponse | null>(null);
   const [page, setPage] = useState(1);
@@ -38,10 +38,10 @@ export default function GroupsPage() {
   const handleRemove = async (record: GroupResponse) => {
     try {
       await GroupsService.delete(record.id);
-      message.success(tCommon('success'));
+      showSuccess();
       mutate();
-    } catch {
-      message.error(tCommon('error'));
+    } catch (error) {
+      handleApiError(error);
     }
   };
 

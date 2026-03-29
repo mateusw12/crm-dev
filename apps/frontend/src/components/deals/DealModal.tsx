@@ -1,13 +1,15 @@
 "use client";
 
 import { useEffect } from "react";
-import { Form, Input, InputNumber, Select, App } from "antd";
+import { Form, Input, InputNumber, Select } from "antd";
 import { useTranslations } from "next-intl";
 import useSWR from "swr";
 import type { DealResponse } from "@/lib/dto";
 import { DealStatus } from "@/lib/dto";
 import { ContactsService, DealsService } from "@/lib/services/index";
 import { Modal } from "@/components/shared/modal/Modal";
+import { showSuccess, showUpdate } from "@/components/shared/notification/notificationService";
+import { handleApiError } from "@/lib/api";
 
 interface DealModalProps {
   open: boolean;
@@ -29,7 +31,6 @@ export function DealModal({ open, deal, onClose, onSuccess }: DealModalProps) {
   const [form] = Form.useForm();
   const tCommon = useTranslations("common");
   const t = useTranslations("deals");
-  const { message } = App.useApp();
 
   const { data: contacts } = useSWR("contacts-all", () =>
     ContactsService.getAll({ limit: 200 }).then((r) => r.data),
@@ -56,14 +57,15 @@ export function DealModal({ open, deal, onClose, onSuccess }: DealModalProps) {
       const values = await form.validateFields();
       if (deal) {
         await DealsService.update(deal.id, values);
+        showUpdate();
       } else {
         await DealsService.create(values);
+        showSuccess();
       }
-      message.success(tCommon("success"));
       onSuccess();
     } catch (error: any) {
       if (error?.errorFields) return;
-      message.error(error?.message ?? tCommon("error"));
+      handleApiError(error);
     }
   };
 
