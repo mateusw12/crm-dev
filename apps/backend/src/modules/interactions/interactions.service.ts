@@ -14,7 +14,7 @@ export class InteractionsService {
 
   async findOne(id: string) {
     const interaction = await this.interactionsRepository.findById(id);
-    if (!interaction) throw new NotFoundException('Interaction not found');
+    if (!interaction) throw new NotFoundException('error.interactionNotFound');
     return interaction;
   }
 

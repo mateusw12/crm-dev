@@ -19,7 +19,7 @@ export class CompaniesService {
 
   async findOne(id: string) {
     const company = await this.companiesRepository.findWithContacts(id);
-    if (!company) throw new NotFoundException('Company not found');
+    if (!company) throw new NotFoundException('error.companyNotFound');
     return company;
   }
 
@@ -29,7 +29,7 @@ export class CompaniesService {
 
     const existing = await this.companiesRepository.findByCnpjInTenant(cnpjDigits, tenantId);
     if (existing) {
-      throw new ConflictException('Já existe uma empresa com este CNPJ neste tenant');
+      throw new ConflictException('error.cnpjDuplicate');
     }
 
     return this.companiesRepository.create({
@@ -43,14 +43,14 @@ export class CompaniesService {
   async update(id: string, dto: UpdateCompanyDto, currentUser: AuthenticatedUser) {
     if (dto.cnpj) {
       const company = await this.companiesRepository.findWithContacts(id);
-      if (!company) throw new NotFoundException('Company not found');
+      if (!company) throw new NotFoundException('error.companyNotFound');
 
       const tenantId = company.tenant_id ?? currentUser.tenantId ?? currentUser.id;
       const cnpjDigits = cleanCnpj(dto.cnpj);
 
       const existing = await this.companiesRepository.findByCnpjInTenant(cnpjDigits, tenantId, id);
       if (existing) {
-        throw new ConflictException('Já existe uma empresa com este CNPJ neste tenant');
+        throw new ConflictException('error.cnpjDuplicate');
       }
 
       return this.companiesRepository.update(id, {

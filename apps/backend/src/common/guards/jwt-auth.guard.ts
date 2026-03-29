@@ -17,7 +17,7 @@ export class JwtAuthGuard implements CanActivate {
     const token = this.extractToken(request);
 
     if (!token) {
-      throw new UnauthorizedException('No token provided');
+      throw new UnauthorizedException('error.invalidToken');
     }
 
     try {
@@ -40,7 +40,7 @@ export class JwtAuthGuard implements CanActivate {
     } catch (err) {
       if (err instanceof UnauthorizedException) throw err;
       console.error('[JwtAuthGuard] Error:', err);
-      throw new UnauthorizedException('Invalid or expired token');
+      throw new UnauthorizedException('error.invalidToken');
     }
   }
 

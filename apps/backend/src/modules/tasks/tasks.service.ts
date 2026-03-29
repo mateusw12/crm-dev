@@ -17,7 +17,7 @@ export class TasksService {
 
   async findOne(id: string) {
     const task = await this.tasksRepository.findWithRelations(id);
-    if (!task) throw new NotFoundException('Task not found');
+    if (!task) throw new NotFoundException('error.taskNotFound');
     return task;
   }
 

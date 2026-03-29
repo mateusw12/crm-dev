@@ -24,7 +24,7 @@ export class RolesGuard implements CanActivate {
 
     const { user } = context.switchToHttp().getRequest();
     if (!user) {
-      throw new ForbiddenException('No user in request');
+      throw new ForbiddenException('error.accessDenied');
     }
 
     const roleHierarchy = {
@@ -37,7 +37,7 @@ export class RolesGuard implements CanActivate {
     const requiredLevel = Math.min(...requiredRoles.map((r) => roleHierarchy[r] ?? 99));
 
     if (userLevel < requiredLevel) {
-      throw new ForbiddenException('Insufficient permissions');
+      throw new ForbiddenException('error.insufficientPermissions');
     }
 
     return true;

@@ -22,20 +22,20 @@ export class UsersService {
   async findOne(id: string, currentUser: AuthenticatedUser) {
     this.checkAccess(id, currentUser);
     const user = await this.usersRepository.findById(id);
-    if (!user) throw new NotFoundException('User not found');
+    if (!user) throw new NotFoundException('error.userNotFound');
     return user;
   }
 
   async update(id: string, dto: UpdateUserDto, currentUser: AuthenticatedUser) {
     if (currentUser.role !== UserRole.ADMIN && currentUser.id !== id) {
-      throw new ForbiddenException('Cannot update other users');
+      throw new ForbiddenException('error.cannotUpdateOtherUsers');
     }
     return this.usersRepository.update(id, { ...dto, updated_at: new Date().toISOString() });
   }
 
   async remove(id: string, currentUser: AuthenticatedUser) {
     if (currentUser.role !== UserRole.ADMIN) {
-      throw new ForbiddenException('Only admins can delete users');
+      throw new ForbiddenException('error.onlyAdminsCanDelete');
     }
     await this.usersRepository.delete(id);
     return { deleted: true };
@@ -47,7 +47,7 @@ export class UsersService {
       currentUser.role !== UserRole.MANAGER &&
       currentUser.id !== id
     ) {
-      throw new ForbiddenException('Access denied');
+      throw new ForbiddenException('error.accessDenied');
     }
   }
 }

@@ -15,13 +15,13 @@ export class GroupsService {
 
   async findOne(id: string) {
     const group = await this.groupsRepository.findWithMembers(id);
-    if (!group) throw new NotFoundException('Group not found');
+    if (!group) throw new NotFoundException('error.groupNotFound');
     return group;
   }
 
   async create(dto: CreateGroupDto, currentUser: AuthenticatedUser) {
     if (currentUser.role === UserRole.USER) {
-      throw new ForbiddenException('Only managers and admins can create groups');
+      throw new ForbiddenException('error.managerOrAdminRequired');
     }
     return this.groupsRepository.create({
       name: dto.name,

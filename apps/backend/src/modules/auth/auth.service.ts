@@ -14,7 +14,7 @@ export class AuthService {
     try {
       return this.jwtService.verify<JwtPayload>(token);
     } catch {
-      throw new UnauthorizedException('Invalid token');
+      throw new UnauthorizedException('error.invalidToken');
     }
   }
 
@@ -23,13 +23,13 @@ export class AuthService {
       return await this.authRepository.findOrCreateUser(payload);
     } catch (err) {
       console.error('[AuthService] getOrCreateUser failed:', err);
-      throw new UnauthorizedException('Failed to create user');
+      throw new UnauthorizedException('error.default');
     }
   }
 
   async me(userId: string) {
     const user = await this.authRepository.findMe(userId);
-    if (!user) throw new UnauthorizedException('User not found');
+    if (!user) throw new UnauthorizedException('error.userNotFound');
     return user;
   }
 }

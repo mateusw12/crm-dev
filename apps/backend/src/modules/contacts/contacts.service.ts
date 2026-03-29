@@ -17,7 +17,7 @@ export class ContactsService {
 
   async findOne(id: string, currentUser: AuthenticatedUser) {
     const contact = await this.contactsRepository.findDetail(id);
-    if (!contact) throw new NotFoundException('Contact not found');
+    if (!contact) throw new NotFoundException('error.contactNotFound');
     this.checkOwnership(contact, currentUser);
     return contact;
   }
@@ -62,6 +62,6 @@ export class ContactsService {
     )
       return;
     if (contact.created_by === currentUser.id) return;
-    throw new ForbiddenException('Access denied');
+    throw new ForbiddenException('error.accessDenied');
   }
 }

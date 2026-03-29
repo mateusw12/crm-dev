@@ -17,7 +17,7 @@ export class DealsService {
 
   async findOne(id: string, currentUser: AuthenticatedUser) {
     const deal = await this.dealsRepository.findWithRelations(id);
-    if (!deal) throw new NotFoundException('Deal not found');
+    if (!deal) throw new NotFoundException('error.dealNotFound');
     this.checkOwnership(deal, currentUser);
     return deal;
   }
@@ -58,6 +58,6 @@ export class DealsService {
     )
       return;
     if (deal.created_by === currentUser.id) return;
-    throw new ForbiddenException('Access denied');
+    throw new ForbiddenException('error.accessDenied');
   }
 }
