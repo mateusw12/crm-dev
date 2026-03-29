@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Layout, Menu, Avatar, Dropdown, Badge, Typography, Space, Button } from 'antd';
 import {
   DashboardOutlined,
@@ -37,6 +37,13 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { data: session } = useSession();
   const t = useTranslations('nav');
   const tAuth = useTranslations('auth');
+
+  // Force sign-out when the backend JWT has expired
+  useEffect(() => {
+    if ((session as any)?.error === 'TokenExpired') {
+      signOut({ callbackUrl: '/auth/signin' });
+    }
+  }, [session]);
 
   const { data: notifications } = useSWR('notifications', NotificationsService.getAll, {
     refreshInterval: 30000,
