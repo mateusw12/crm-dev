@@ -17,12 +17,14 @@ export default function TasksPage() {
   const tCommon = useTranslations("common");
   const { message } = App.useApp();
   const [status, setStatus] = useState<TaskStatus | undefined>();
+  const [page, setPage] = useState(1);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<TaskResponse | null>(null);
 
-  const { data: tasks = [], isLoading, mutate } = useSWR(
-    ["tasks", status],
-    () => TasksService.getAll(status ? { status } : {}),
+  const { data, isLoading, mutate } = useSWR(
+    ['tasks', status, page],
+    () => TasksService.getAll(status ? { status, page, limit: 20 } : { page, limit: 20 }),
+    { keepPreviousData: true },
   );
 
   const handleRemove = async (record: TaskResponse) => {
@@ -103,11 +105,18 @@ export default function TasksPage() {
   return (
     <>
       <FormGrid<TaskResponse>
-        dataSource={tasks}
+        dataSource={data?.data ?? []}
         columns={columns}
         loading={isLoading}
         addButtonLabel={t("new")}
         searchPlaceholder={tCommon("search")}
+        pagination={{
+          total: data?.total,
+          current: page,
+          pageSize: 20,
+          onChange: setPage,
+          showTotal: (total) => `${tCommon('total')}: ${total}`,
+        }}
         onAdd={() => { setEditingTask(null); setModalOpen(true); }}
         onEdit={(record) => { setEditingTask(record); setModalOpen(true); }}
         onRemove={handleRemove}
@@ -116,7 +125,7 @@ export default function TasksPage() {
             allowClear
             placeholder={tCommon("filter")}
             style={{ width: 160 }}
-            onChange={setStatus}
+            onChange={(v) => { setStatus(v); setPage(1); }}
             options={[
               { value: "PENDING", label: t("status.PENDING") },
               { value: "DONE", label: t("status.DONE") },

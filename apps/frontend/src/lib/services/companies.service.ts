@@ -4,6 +4,7 @@ import type {
   UpdateCompanyDto,
   CompanyResponse,
   CompanyDetailResponse,
+  CompanyListResponse,
   CepResponse,
   DeletedResponse,
   GetCompaniesParams,
@@ -13,7 +14,7 @@ const API_BASE = '/companies';
 
 export class CompaniesService {
   static async getAll(params?: GetCompaniesParams) {
-    return http.get<CompanyResponse[]>(API_BASE, { params });
+    return http.get<CompanyListResponse>(API_BASE, { params });
   }
 
   static async getById(id: string) {

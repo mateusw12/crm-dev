@@ -6,6 +6,15 @@ export interface GetTasksParams {
   contactId?: string;
   dealId?: string;
   dueDate?: string;
+  page?: number;
+  limit?: number;
+}
+
+export interface TaskListResponse {
+  data: TaskResponse[];
+  total: number;
+  page: number;
+  limit: number;
 }
 
 export interface CreateTaskDto {

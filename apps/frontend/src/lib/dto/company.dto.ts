@@ -2,6 +2,15 @@ import type { ContactRef } from './refs';
 
 export interface GetCompaniesParams {
   search?: string;
+  page?: number;
+  limit?: number;
+}
+
+export interface CompanyListResponse {
+  data: CompanyResponse[];
+  total: number;
+  page: number;
+  limit: number;
 }
 
 export interface CreateCompanyDto {

@@ -3,6 +3,7 @@ import type {
   CreateTaskDto,
   UpdateTaskDto,
   TaskResponse,
+  TaskListResponse,
   DeletedResponse,
   GetTasksParams,
 } from '../dto';
@@ -11,7 +12,7 @@ const API_BASE = '/tasks';
 
 export class TasksService {
   static async getAll(params?: GetTasksParams) {
-    return http.get<TaskResponse[]>(API_BASE, { params });
+    return http.get<TaskListResponse>(API_BASE, { params });
   }
 
   static async getById(id: string) {

@@ -1,5 +1,17 @@
 import type { UserRef } from './refs';
 
+export interface GetGroupsParams {
+  page?: number;
+  limit?: number;
+}
+
+export interface GroupListResponse {
+  data: GroupResponse[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
 export interface CreateGroupDto {
   name: string;
   description?: string;

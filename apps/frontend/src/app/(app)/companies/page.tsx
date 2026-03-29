@@ -16,10 +16,12 @@ export default function CompaniesPage() {
   const { message } = App.useApp();
   const [modalOpen, setModalOpen] = useState(false);
   const [editingCompany, setEditingCompany] = useState<CompanyResponse | null>(null);
+  const [page, setPage] = useState(1);
 
-  const { data: companies = [], isLoading, mutate } = useSWR(
-    'companies',
-    () => CompaniesService.getAll({}),
+  const { data, isLoading, mutate } = useSWR(
+    ['companies', page],
+    () => CompaniesService.getAll({ page, limit: 20 }),
+    { keepPreviousData: true },
   );
 
   const handleRemove = async (record: CompanyResponse) => {
@@ -63,11 +65,18 @@ export default function CompaniesPage() {
   return (
     <>
       <FormGrid<CompanyResponse>
-        dataSource={companies}
+        dataSource={data?.data ?? []}
         columns={columns}
         loading={isLoading}
         addButtonLabel={t('new')}
         searchPlaceholder={tCommon('search')}
+        pagination={{
+          total: data?.total,
+          current: page,
+          pageSize: 20,
+          onChange: setPage,
+          showTotal: (total) => `${tCommon('total')}: ${total}`,
+        }}
         onAdd={() => { setEditingCompany(null); setModalOpen(true); }}
         onEdit={(record) => { setEditingCompany(record); setModalOpen(true); }}
         onRemove={handleRemove}

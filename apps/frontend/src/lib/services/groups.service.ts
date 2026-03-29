@@ -3,16 +3,18 @@ import type {
   CreateGroupDto,
   UpdateGroupDto,
   GroupResponse,
+  GroupListResponse,
   GroupDetailResponse,
   GroupMemberResponse,
+  GetGroupsParams,
   DeletedResponse,
 } from '../dto';
 
 const API_BASE = '/groups';
 
 export class GroupsService {
-  static async getAll() {
-    return http.get<GroupResponse[]>(API_BASE);
+  static async getAll(params?: GetGroupsParams) {
+    return http.get<GroupListResponse>(API_BASE, { params });
   }
 
   static async getById(id: string) {

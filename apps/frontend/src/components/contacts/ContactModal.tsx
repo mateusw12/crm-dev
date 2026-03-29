@@ -85,7 +85,7 @@ export function ContactModal({ open, contact, onClose, onSuccess }: ContactModal
             allowClear
             showSearch
             optionFilterProp="label"
-            options={(companies ?? []).map((c: any) => ({ value: c.id, label: c.name }))}
+            options={(companies?.data ?? []).map((item) => ({ value: item.id, label: item.name }))}
           />
         </Form.Item>
         <Form.Item name="notes" label={tCommon('notes')}>

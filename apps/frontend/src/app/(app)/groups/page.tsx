@@ -17,10 +17,12 @@ export default function GroupsPage() {
   const { message } = App.useApp();
   const [modalOpen, setModalOpen] = useState(false);
   const [editingGroup, setEditingGroup] = useState<GroupResponse | null>(null);
+  const [page, setPage] = useState(1);
 
-  const { data: groups = [], isLoading, mutate } = useSWR<GroupResponse[]>(
-    'groups',
-    GroupsService.getAll,
+  const { data, isLoading, mutate } = useSWR(
+    ['groups', page],
+    () => GroupsService.getAll({ page, limit: 20 }),
+    { keepPreviousData: true },
   );
 
   const handleAdd = () => {
@@ -81,11 +83,18 @@ export default function GroupsPage() {
   return (
     <>
       <FormGrid<GroupResponse>
-        dataSource={groups}
+        dataSource={data?.data ?? []}
         columns={columns}
         loading={isLoading}
         addButtonLabel={t('new')}
         searchPlaceholder={tCommon('search')}
+        pagination={{
+          total: data?.total,
+          current: page,
+          pageSize: 20,
+          onChange: setPage,
+          showTotal: (total) => `${tCommon('total')}: ${total}`,
+        }}
         onAdd={handleAdd}
         onEdit={handleEdit}
         onRemove={handleRemove}
