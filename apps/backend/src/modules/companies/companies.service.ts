@@ -3,10 +3,14 @@ import { AuthenticatedUser } from '../../common/types';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { CompaniesRepository } from './companies.repository';
+import { BrasilApiService } from '../brasilapi/brasilapi.service';
 
 @Injectable()
 export class CompaniesService {
-  constructor(private readonly companiesRepository: CompaniesRepository) {}
+  constructor(
+    private readonly companiesRepository: CompaniesRepository,
+    private readonly brasilApiService: BrasilApiService,
+  ) {}
 
   async findAll(currentUser: AuthenticatedUser, search?: string) {
     return this.companiesRepository.findAllFiltered(currentUser, search);
@@ -36,5 +40,13 @@ export class CompaniesService {
   async remove(id: string) {
     await this.companiesRepository.delete(id);
     return { deleted: true };
+  }
+
+  async lookupCep(cep: string) {
+    return this.brasilApiService.lookupCep(cep);
+  }
+
+  async lookupCnpj(cnpj: string) {
+    return this.brasilApiService.lookupCnpj(cnpj);
   }
 }

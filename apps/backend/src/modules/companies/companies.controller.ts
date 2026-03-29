@@ -27,6 +27,17 @@ export class CompaniesController {
     return this.companiesService.findAll(user, search);
   }
 
+  /** Must be declared BEFORE :id to avoid route conflict */
+  @Get('cep/:cep')
+  lookupCep(@Param('cep') cep: string) {
+    return this.companiesService.lookupCep(cep);
+  }
+
+  @Get('cnpj/:cnpj')
+  lookupCnpj(@Param('cnpj') cnpj: string) {
+    return this.companiesService.lookupCnpj(cnpj);
+  }
+
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.companiesService.findOne(id);

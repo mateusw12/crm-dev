@@ -12,11 +12,13 @@ import { DealsModule } from "./modules/deals/deals.module";
 import { GroupsModule } from "./modules/groups/groups.module";
 import { InteractionsModule } from "./modules/interactions/interactions.module";
 import { TasksModule } from "./modules/tasks/tasks.module";
+import { BrasilApiModule } from "./modules/brasilapi/brasilapi.module";
 
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     ThrottlerModule.forRoot([{ ttl: 60000, limit: 100 }]),
+    BrasilApiModule,
     SupabaseModule,
     AuthModule,
     UsersModule,
