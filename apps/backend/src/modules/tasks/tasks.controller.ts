@@ -31,8 +31,10 @@ export class TasksController {
     @Query('contactId') contactId?: string,
     @Query('dealId') dealId?: string,
     @Query('dueDate') dueDate?: string,
+    @Query('page') page?: number,
+    @Query('limit') limit?: number,
   ) {
-    return this.tasksService.findAll(user, { status, contactId, dealId, dueDate });
+    return this.tasksService.findAll(user, { status, contactId, dealId, dueDate, page, limit });
   }
 
   @Get(':id')

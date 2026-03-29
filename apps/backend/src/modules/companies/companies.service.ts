@@ -12,8 +12,8 @@ export class CompaniesService {
     private readonly brasilApiService: BrasilApiService,
   ) {}
 
-  async findAll(currentUser: AuthenticatedUser, search?: string) {
-    return this.companiesRepository.findAllFiltered(currentUser, search);
+  async findAll(currentUser: AuthenticatedUser, filters: { search?: string; page?: number; limit?: number }) {
+    return this.companiesRepository.findAllFiltered(currentUser, filters);
   }
 
   async findOne(id: string) {

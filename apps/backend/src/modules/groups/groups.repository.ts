@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { SupabaseClient } from '@supabase/supabase-js';
 import { SUPABASE_CLIENT } from '../../supabase/supabase.module';
 import { AuthenticatedUser, UserRole } from '../../common/types';
-import { BaseRepository } from '../../common/repositories/base.repository';
+import { BaseRepository, PaginatedResult } from '../../common/repositories/base.repository';
 
 @Injectable()
 export class GroupsRepository extends BaseRepository {
@@ -10,8 +10,14 @@ export class GroupsRepository extends BaseRepository {
     super(supabase, 'groups');
   }
 
-  async findAllScoped(currentUser: AuthenticatedUser) {
-    let query = this.query('*, group_members(user_id, users(id, name, email))').order('created_at', {
+  async findAllScoped(
+    currentUser: AuthenticatedUser,
+    filters: { page?: number; limit?: number } = {},
+  ): Promise<PaginatedResult<any>> {
+    const page = filters.page ?? 1;
+    const limit = filters.limit ?? 20;
+
+    let query = this.queryPaginated('*, group_members(user_id, users(id, name, email))').order('created_at', {
       ascending: false,
     });
 
@@ -19,9 +25,12 @@ export class GroupsRepository extends BaseRepository {
       query = query.eq('manager_id', currentUser.id);
     }
 
-    const { data, error } = await query;
+    const from = (page - 1) * limit;
+    query = query.range(from, from + limit - 1);
+
+    const { data, error, count } = await query;
     if (error) throw error;
-    return data;
+    return { data: data ?? [], total: count ?? 0, page, limit };
   }
 
   async findWithMembers(id: string) {

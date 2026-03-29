@@ -26,8 +26,13 @@ export class CompaniesController {
 
   @Get()
   @ApiOperation({ summary: "Get all companies" })
-  findAll(@User() user: AuthenticatedUser, @Query("search") search?: string) {
-    return this.companiesService.findAll(user, search);
+  findAll(
+    @User() user: AuthenticatedUser,
+    @Query('search') search?: string,
+    @Query('page') page?: number,
+    @Query('limit') limit?: number,
+  ) {
+    return this.companiesService.findAll(user, { search, page, limit });
   }
 
   @Get("cep/:cep")

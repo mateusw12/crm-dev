@@ -9,8 +9,8 @@ import { GroupsRepository } from './groups.repository';
 export class GroupsService {
   constructor(private readonly groupsRepository: GroupsRepository) {}
 
-  async findAll(currentUser: AuthenticatedUser) {
-    return this.groupsRepository.findAllScoped(currentUser);
+  async findAll(currentUser: AuthenticatedUser, filters: { page?: number; limit?: number } = {}) {
+    return this.groupsRepository.findAllScoped(currentUser, filters);
   }
 
   async findOne(id: string) {

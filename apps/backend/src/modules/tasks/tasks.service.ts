@@ -10,7 +10,7 @@ export class TasksService {
 
   async findAll(
     currentUser: AuthenticatedUser,
-    filters: { status?: TaskStatus; contactId?: string; dealId?: string; dueDate?: string },
+    filters: { status?: TaskStatus; contactId?: string; dealId?: string; dueDate?: string; page?: number; limit?: number },
   ) {
     return this.tasksRepository.findAllFiltered(currentUser, filters);
   }

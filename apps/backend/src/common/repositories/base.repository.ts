@@ -1,5 +1,12 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 
+export interface PaginatedResult<T> {
+  data: T[];
+  total: number;
+  page: number;
+  limit: number;
+}
+
 export abstract class BaseRepository<T = any> {
   constructor(
     protected readonly supabase: SupabaseClient,
@@ -8,6 +15,20 @@ export abstract class BaseRepository<T = any> {
 
   protected query(select = '*') {
     return this.supabase.from(this.table).select(select);
+  }
+
+  protected queryPaginated(select = '*') {
+    return this.supabase.from(this.table).select(select, { count: 'exact' });
+  }
+
+  protected applyPagination<Q extends { range: (from: number, to: number) => Q }>(
+    query: Q,
+    page: number,
+    limit: number,
+  ): { query: Q; from: number; to: number } {
+    const from = (page - 1) * limit;
+    const to = from + limit - 1;
+    return { query: query.range(from, to), from, to };
   }
 
   async findById(id: string, select = '*'): Promise<T | null> {

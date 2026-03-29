@@ -6,6 +6,7 @@ import {
   Delete,
   Param,
   Body,
+  Query,
   UseGuards,
 } from '@nestjs/common';
 import { GroupsService } from './groups.service';
@@ -28,8 +29,12 @@ export class GroupsController {
   @Get()
   @ApiOperation({ summary: 'Get all groups' })
   @Roles(UserRole.MANAGER, UserRole.ADMIN)
-  findAll(@User() user: AuthenticatedUser) {
-    return this.groupsService.findAll(user);
+  findAll(
+    @User() user: AuthenticatedUser,
+    @Query('page') page?: number,
+    @Query('limit') limit?: number,
+  ) {
+    return this.groupsService.findAll(user, { page, limit });
   }
 
   @Get(':id')
