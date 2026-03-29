@@ -14,23 +14,28 @@ import { RolesGuard } from '../../common/guards/roles.guard';
 import { User } from '../../common/decorators/current-user.decorator';
 import { Roles } from '../../common/decorators/roles.decorator';
 import { AuthenticatedUser, UserRole } from '../../common/types';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Users')
 @Controller('users')
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Get()
+  @ApiOperation({ summary: 'Get all users' })
   findAll(@User() user: AuthenticatedUser) {
     return this.usersService.findAll(user);
   }
 
   @Get(':id')
+  @ApiOperation({ summary: 'Get user details by ID' })
   findOne(@Param('id') id: string, @User() user: AuthenticatedUser) {
     return this.usersService.findOne(id, user);
   }
 
   @Patch(':id')
+  @ApiOperation({ summary: 'Update user details by ID' })
   update(
     @Param('id') id: string,
     @Body() dto: UpdateUserDto,
@@ -41,6 +46,7 @@ export class UsersController {
 
   @Delete(':id')
   @Roles(UserRole.ADMIN)
+  @ApiOperation({ summary: 'Delete user by ID' })
   remove(@Param('id') id: string, @User() user: AuthenticatedUser) {
     return this.usersService.remove(id, user);
   }

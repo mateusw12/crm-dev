@@ -10,8 +10,8 @@
     "build:backend": "npm --prefix apps/backend run build",
     "build:frontend": "npm --prefix apps/frontend run build"
   },
-  "devDependencies": {
-    "class-transformer": "^0.5.1",
-    "class-validator": "^0.15.1"
+  "dependencies": {
+    "class-transformer": "0.5.1",
+    "class-validator": "0.14.0"
   }
 }
