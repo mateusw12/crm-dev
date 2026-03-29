@@ -1,9 +1,13 @@
-import { Injectable, NotFoundException, ForbiddenException } from '@nestjs/common';
-import { AuthenticatedUser, UserRole, DealStatus } from '../../common/types';
-import { CreateDealDto } from './dto/create-deal.dto';
-import { UpdateDealDto } from './dto/update-deal.dto';
-import { DealsRepository } from './deals.repository';
-import { buildCsv } from '../../common/utils/export.util';
+import {
+  Injectable,
+  NotFoundException,
+  ForbiddenException,
+} from "@nestjs/common";
+import { AuthenticatedUser, UserRole, DealStatus } from "../../common/types";
+import { CreateDealDto } from "./dto/create-deal.dto";
+import { UpdateDealDto } from "./dto/update-deal.dto";
+import { DealsRepository } from "./deals.repository";
+import { buildCsv } from "../../common/utils/export.util";
 
 @Injectable()
 export class DealsService {
@@ -18,7 +22,7 @@ export class DealsService {
 
   async findOne(id: string, currentUser: AuthenticatedUser) {
     const deal = await this.dealsRepository.findWithRelations(id);
-    if (!deal) throw new NotFoundException('error.dealNotFound');
+    if (!deal) throw new NotFoundException("error.dealNotFound");
     this.checkOwnership(deal, currentUser);
     return deal;
   }
@@ -59,30 +63,34 @@ export class DealsService {
     )
       return;
     if (deal.created_by === currentUser.id) return;
-    throw new ForbiddenException('error.accessDenied');
+    throw new ForbiddenException("error.accessDenied");
   }
 
   async exportAll(currentUser: AuthenticatedUser): Promise<Buffer> {
     const data = await this.dealsRepository.findAllForExport(currentUser);
     return buildCsv(data, [
-      { header: 'Title', key: 'title' },
-      { header: 'Status', key: 'status' },
-      { header: 'Value', key: 'value' },
-      { header: 'Contact', key: 'contact' },
-      { header: 'Created At', key: 'created_at' },
+      { header: "Title", key: "title" },
+      { header: "Status", key: "status" },
+      { header: "Value", key: "value" },
+      { header: "Contact", key: "contact" },
+      { header: "Created At", key: "created_at" },
     ]);
   }
 
-  async getReports(
-    currentUser: AuthenticatedUser,
-    from: string,
-    to: string,
-  ) {
-    const deals = await this.dealsRepository.findByPeriod(currentUser, from, to);
+  async getReports(currentUser: AuthenticatedUser, from: string, to: string) {
+    const deals: Array<{
+      id: string;
+      title: string;
+      value: number;
+      status: DealStatus;
+      created_at: string;
+    }> = await this.dealsRepository.findByPeriod(currentUser, from, to);
 
     const won = deals.filter((d) => d.status === DealStatus.WON);
     const lost = deals.filter((d) => d.status === DealStatus.LOST);
-    const open = deals.filter((d) => d.status !== DealStatus.WON && d.status !== DealStatus.LOST);
+    const open = deals.filter(
+      (d) => d.status !== DealStatus.WON && d.status !== DealStatus.LOST,
+    );
 
     const sum = (arr: any[]) => arr.reduce((acc, d) => acc + (d.value ?? 0), 0);
 

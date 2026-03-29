@@ -33,6 +33,7 @@ export class ContactsService {
       phone: dto.phone,
       company_id: dto.companyId,
       notes: dto.notes,
+      ...(dto.avatarUrl ? { avatar_url: dto.avatarUrl } : {}),
       created_by: currentUser.id,
       updated_by: currentUser.id,
       tenant_id: currentUser.tenantId ?? currentUser.id,
@@ -47,6 +48,7 @@ export class ContactsService {
       phone: dto.phone,
       company_id: dto.companyId,
       notes: dto.notes,
+      ...(dto.avatarUrl !== undefined ? { avatar_url: dto.avatarUrl } : {}),
       updated_by: currentUser.id,
       updated_at: new Date().toISOString(),
     });

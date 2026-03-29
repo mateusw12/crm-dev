@@ -51,7 +51,7 @@ export class DealsRepository extends BaseRepository {
     currentUser: AuthenticatedUser,
     from: string,
     to: string,
-  ) {
+  ): Promise<Array<{ id: string; title: string; value: number; status: DealStatus; created_at: string }>> {
     let query = this.query('id, title, value, status, created_at')
       .gte('created_at', from)
       .lte('created_at', to)
@@ -63,6 +63,6 @@ export class DealsRepository extends BaseRepository {
 
     const { data, error } = await query;
     if (error) throw error;
-    return data ?? [];
+    return (data ?? []) as unknown as Array<{ id: string; title: string; value: number; status: DealStatus; created_at: string }>;
   }
 }

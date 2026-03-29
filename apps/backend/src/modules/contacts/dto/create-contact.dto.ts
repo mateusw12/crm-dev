@@ -39,4 +39,9 @@ export class CreateContactDto {
     example: "Met at the conference, interested in our product",
   })
   notes?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty({ description: 'URL of the contact avatar image', required: false })
+  avatarUrl?: string;
 }

@@ -45,4 +45,9 @@ export class CreateCompanyDto {
   @MaxLength(2000)
   @ApiProperty({ description: 'Additional notes about the company', example: 'Important client, handle with care' })
   notes?: string;
+
+  @IsOptional()
+  @IsString()
+  @ApiProperty({ description: 'URL of the company logo image', required: false })
+  logoUrl?: string;
 }

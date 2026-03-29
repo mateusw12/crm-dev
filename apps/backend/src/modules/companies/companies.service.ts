@@ -33,9 +33,11 @@ export class CompaniesService {
       throw new ConflictException('error.cnpjDuplicate');
     }
 
+    const { logoUrl, ...rest } = dto;
     return this.companiesRepository.create({
-      ...dto,
+      ...rest,
       cnpj: cnpjDigits,
+      ...(logoUrl ? { logo_url: logoUrl } : {}),
       created_by: currentUser.id,
       tenant_id: tenantId,
     });
@@ -54,15 +56,19 @@ export class CompaniesService {
         throw new ConflictException('error.cnpjDuplicate');
       }
 
+      const { logoUrl: logoUrl1, ...rest1 } = dto;
       return this.companiesRepository.update(id, {
-        ...dto,
+        ...rest1,
         cnpj: cnpjDigits,
+        ...(logoUrl1 ? { logo_url: logoUrl1 } : {}),
         updated_at: new Date().toISOString(),
       });
     }
 
+    const { logoUrl, ...rest } = dto;
     return this.companiesRepository.update(id, {
-      ...dto,
+      ...rest,
+      ...(logoUrl ? { logo_url: logoUrl } : {}),
       updated_at: new Date().toISOString(),
     });
   }
