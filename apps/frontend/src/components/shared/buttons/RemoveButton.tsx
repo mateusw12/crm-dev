@@ -9,6 +9,7 @@ import { GenericButton } from './GenericButton';
 
 type RemoveButtonProps = {
   label?: string;
+  showLabel?: boolean;
   icon?: ReactNode;
   onClick?: () => void;
   disabled?: boolean;
@@ -19,6 +20,7 @@ type RemoveButtonProps = {
 
 export function RemoveButton({
   label,
+  showLabel = true,
   icon = <DeleteOutlined />,
   onClick,
   disabled = false,
@@ -32,6 +34,7 @@ export function RemoveButton({
       buttonStyle="remove"
       icon={icon}
       label={label ?? t('remove')}
+      showLabel={showLabel}
       onClick={confirmTitle ? undefined : onClick}
       disabled={disabled}
       loading={loading}

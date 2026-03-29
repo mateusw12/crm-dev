@@ -8,12 +8,13 @@ import { getButtonStyle } from './buttonStyles';
 
 type GenericButtonProps = Omit<ButtonProps, 'children' | 'type' | 'style'> & {
   label?: string;
+  showLabel?: boolean;
   buttonStyle?: ButtonStyleVariant;
   /** Falls back to antd type when no buttonStyle is provided */
   type?: ButtonProps['type'];
 };
 
-export function GenericButton({ label, buttonStyle, type, style, ...rest }: GenericButtonProps & { style?: React.CSSProperties }) {
+export function GenericButton({ label, showLabel = true, buttonStyle, type, style, ...rest }: GenericButtonProps & { style?: React.CSSProperties }) {
   const [hovered, setHovered] = useState(false);
 
   const computedStyle = buttonStyle
@@ -26,9 +27,10 @@ export function GenericButton({ label, buttonStyle, type, style, ...rest }: Gene
       style={computedStyle}
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      size='small'
       {...rest}
     >
-      {label}
+      {showLabel ? label : null}
     </Button>
   );
 }

@@ -8,6 +8,7 @@ import { GenericButton } from './GenericButton';
 
 type EditButtonProps = {
   label?: string;
+  showLabel?: boolean;
   icon?: ReactNode;
   onClick?: () => void;
   disabled?: boolean;
@@ -17,6 +18,7 @@ type EditButtonProps = {
 
 export function EditButton({
   label,
+  showLabel = true,
   icon = <EditOutlined />,
   onClick,
   disabled = false,
@@ -29,6 +31,7 @@ export function EditButton({
       buttonStyle="edit"
       icon={icon}
       label={label ?? t('edit')}
+      showLabel={showLabel}
       onClick={onClick}
       disabled={disabled}
       loading={loading}
