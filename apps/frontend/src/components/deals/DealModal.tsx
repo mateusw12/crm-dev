@@ -7,7 +7,7 @@ import useSWR from "swr";
 import type { DealResponse } from "@/lib/dto";
 import { DealStatus } from "@/lib/dto";
 import { ContactsService, DealsService } from "@/lib/services/index";
-import { Modal } from "@/components/shared/Modal";
+import { Modal } from "@/components/shared/modal/Modal";
 
 interface DealModalProps {
   open: boolean;

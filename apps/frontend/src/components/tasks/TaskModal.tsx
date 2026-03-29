@@ -7,7 +7,7 @@ import useSWR from 'swr';
 import dayjs from 'dayjs';
 import type { TaskResponse } from '@/lib/dto';
 import { ContactsService, DealsService, TasksService } from '@/lib/services/index';
-import { Modal } from '@/components/shared/Modal';
+import { Modal } from '@/components/shared/modal/Modal';
 
 interface TaskModalProps {
   open: boolean;

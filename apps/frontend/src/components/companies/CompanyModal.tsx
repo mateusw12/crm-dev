@@ -5,7 +5,7 @@ import { Form, Input, App } from 'antd';
 import { useTranslations } from 'next-intl';
 import type { CompanyResponse } from '@/lib/dto';
 import { CompaniesService } from '@/lib/services/index';
-import { Modal } from '@/components/shared/Modal';
+import { Modal } from '@/components/shared/modal/Modal';
 
 interface CompanyModalProps {
   open: boolean;

@@ -8,7 +8,7 @@ import type { GroupResponse, UserResponse } from "@/lib/dto";
 import { GroupsService } from "@/lib/services/groups.service";
 import { UsersService } from "@/lib/services/users.service";
 import { AuthService } from "@/lib/services/auth.service";
-import { Modal } from "@/components/shared/Modal";
+import { Modal } from "@/components/shared/modal/Modal";
 
 interface GroupModalProps {
   open: boolean;

@@ -7,7 +7,7 @@ import useSWR from 'swr';
 import type { ContactResponse } from '@/lib/dto';
 import { CompaniesService } from '@/lib/services/companies.service';
 import { ContactsService } from '@/lib/services/contacts.service';
-import { Modal } from '@/components/shared/Modal';
+import { Modal } from '@/components/shared/modal/Modal';
 
 interface ContactModalProps {
   open: boolean;

@@ -6,7 +6,7 @@ import { useTranslations } from 'next-intl';
 import dayjs from 'dayjs';
 import type { InteractionResponse } from '@/lib/dto';
 import { InteractionsService } from '@/lib/services/index';
-import { Modal } from '@/components/shared/Modal';
+import { Modal } from '@/components/shared/modal/Modal';
 
 interface InteractionModalProps {
   open: boolean;
