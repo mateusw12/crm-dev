@@ -89,6 +89,7 @@
     "cnpj": "CNPJ",
     "cep": "CEP",
     "cnpjInvalid": "CNPJ inválido",
+    "cnpjDuplicate": "Já existe uma empresa com este CNPJ",
     "cepNotFound": "CEP não encontrado",
     "cepSearching": "Buscando CEP..."
   },

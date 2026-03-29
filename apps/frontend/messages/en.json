@@ -89,6 +89,7 @@
     "cnpj": "CNPJ",
     "cep": "ZIP Code",
     "cnpjInvalid": "Invalid CNPJ",
+    "cnpjDuplicate": "A company with this CNPJ already exists",
     "cepNotFound": "ZIP code not found",
     "cepSearching": "Looking up ZIP code..."
   },

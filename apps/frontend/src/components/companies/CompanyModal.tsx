@@ -78,7 +78,13 @@ export function CompanyModal({ open, company, onClose, onSuccess }: CompanyModal
       onSuccess();
     } catch (error: any) {
       if (error?.errorFields) return;
-      message.error(error?.message ?? tCommon('error'));
+      const msg: string = error?.message ?? tCommon('error');
+      // Show duplicate CNPJ as a field error instead of a generic toast
+      if (msg.toLowerCase().includes('cnpj')) {
+        form.setFields([{ name: 'cnpj', errors: [t('cnpjDuplicate')] }]);
+      } else {
+        message.error(msg);
+      }
     }
   };
 
