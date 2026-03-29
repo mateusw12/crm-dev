@@ -1,24 +1,16 @@
 'use client';
 
 import { useState } from 'react';
-import {
-  Button,
-  Space,
-  Popconfirm,
-  Typography,
-  App,
-  Avatar,
-  Tag,
-  Collapse,
-} from 'antd';
-import { PlusOutlined, EditOutlined, DeleteOutlined } from '@ant-design/icons';
+import { Tag, Avatar, Space, Typography } from 'antd';
+import type { TableColumnsType } from 'antd';
 import { useTranslations } from 'next-intl';
 import useSWR from 'swr';
+import { App } from 'antd';
 import type { GroupResponse } from '@/lib/dto';
 import { GroupModal } from '@/components/groups/GroupModal';
 import { GroupsService } from '@/lib/services/groups.service';
-
-const { Title } = Typography;
+import { FormGrid } from '@/components/shared/FormGrid';
+import { showConfirmDelete } from '@/components/shared/confirm/confirmService';
 
 export default function GroupsPage() {
   const t = useTranslations('groups');
@@ -27,11 +19,26 @@ export default function GroupsPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingGroup, setEditingGroup] = useState<GroupResponse | null>(null);
 
-  const { data: groups = [], isLoading, mutate } = useSWR<GroupResponse[]>('groups', GroupsService.getAll);
+  const { data: groups = [], isLoading, mutate } = useSWR<GroupResponse[]>(
+    'groups',
+    GroupsService.getAll,
+  );
 
-  const handleDelete = async (id: string) => {
+  const handleAdd = () => {
+    setEditingGroup(null);
+    setModalOpen(true);
+  };
+
+  const handleEdit = (record: GroupResponse) => {
+    setEditingGroup(record);
+    setModalOpen(true);
+  };
+
+  const handleRemove = async (record: GroupResponse) => {
+    const confirmed = await showConfirmDelete();
+    if (!confirmed) return;
     try {
-      await GroupsService.delete(id);
+      await GroupsService.delete(record.id);
       message.success(tCommon('success'));
       mutate();
     } catch {
@@ -39,60 +46,62 @@ export default function GroupsPage() {
     }
   };
 
+  const columns: TableColumnsType<GroupResponse> = [
+    {
+      title: tCommon('name'),
+      dataIndex: 'name',
+      key: 'name',
+      sorter: (a, b) => a.name.localeCompare(b.name),
+    },
+    {
+      title: tCommon('description'),
+      dataIndex: 'description',
+      key: 'description',
+      render: (v?: string) => v ?? '—',
+    },
+    {
+      title: t('members'),
+      key: 'members',
+      render: (_: unknown, record: GroupResponse) => {
+        const members = record.group_members ?? [];
+        if (!members.length) return <Typography.Text type="secondary">—</Typography.Text>;
+        return (
+          <Space size={4} wrap>
+            {members.map((m) => (
+              <Tag key={m.user_id} style={{ borderRadius: 20, padding: '2px 8px' }}>
+                <Avatar size="small" style={{ marginRight: 4 }}>
+                  {m.users?.name?.[0] ?? 'U'}
+                </Avatar>
+                {m.users?.name ?? m.user_id}
+              </Tag>
+            ))}
+          </Space>
+        );
+      },
+    },
+  ];
+
   return (
-    <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 24 }}>
-        <Title level={3} style={{ margin: 0 }}>{t('title')}</Title>
-        <Button type="primary" icon={<PlusOutlined />} onClick={() => { setEditingGroup(null); setModalOpen(true); }}>{t('new')}</Button>
-      </div>
+    <>
+      <FormGrid<GroupResponse>
+        dataSource={groups}
+        columns={columns}
+        loading={isLoading}
+        addButtonLabel={t('new')}
+        deleteConfirmTitle={tCommon('confirm')}
+        searchPlaceholder={tCommon('search')}
+        onAdd={handleAdd}
+        onEdit={handleEdit}
+        onRemove={handleRemove}
+      />
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: 12 }}>
-        {(groups ?? []).map((group) => (
-          <Collapse
-            key={group.id}
-            style={{ borderRadius: 12, background: '#fff' }}
-            items={[
-              {
-                key: group.id,
-                label: (
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Space>
-                      <Typography.Text strong>{group.name}</Typography.Text>
-                      <Tag color="blue">{(group.group_members ?? []).length} {t('members')}</Tag>
-                    </Space>
-                    <Space onClick={(e) => e.stopPropagation()}>
-                      <Button type="text" size="small" icon={<EditOutlined />} onClick={() => { setEditingGroup(group); setModalOpen(true); }} />
-                      <Popconfirm title="Delete group?" onConfirm={() => handleDelete(group.id)} okText={tCommon('yes')} cancelText={tCommon('no')}>
-                        <Button type="text" size="small" danger icon={<DeleteOutlined />} />
-                      </Popconfirm>
-                    </Space>
-                  </div>
-                ),
-                children: (
-                  <div>
-                      {(group.group_members ?? []).length === 0 ? (
-                      <Typography.Text type="secondary">{tCommon('noData')}</Typography.Text>
-                    ) : (
-                      <Space wrap>
-                        {(group.group_members ?? []).map((member) => (
-                          <Tag key={member.user_id} style={{ padding: '4px 8px', borderRadius: 20 }}>
-                            <Avatar size="small" style={{ marginRight: 4 }}>
-                              {member.users?.name?.[0] ?? 'U'}
-                            </Avatar>
-                            {member.users?.name ?? member.user_id}
-                          </Tag>
-                        ))}
-                      </Space>
-                    )}
-                  </div>
-                ),
-              },
-            ]}
-          />
-        ))}
-      </div>
-
-      <GroupModal open={modalOpen} group={editingGroup} onClose={() => setModalOpen(false)} onSuccess={() => { setModalOpen(false); mutate(); }} />
-    </div>
+      <GroupModal
+        open={modalOpen}
+        group={editingGroup}
+        onClose={() => setModalOpen(false)}
+        onSuccess={() => { setModalOpen(false); mutate(); }}
+      />
+    </>
   );
 }
+

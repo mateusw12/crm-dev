@@ -7,3 +7,4 @@ export * from "./dashboard.service";
 export * from "./notifications.service";
 export * from "./groups.service";
 export * from "./auth.service";
+export * from "./users.service";
