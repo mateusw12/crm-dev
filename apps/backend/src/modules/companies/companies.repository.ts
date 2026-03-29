@@ -40,4 +40,18 @@ export class CompaniesRepository extends BaseRepository {
   async findWithContacts(id: string) {
     return this.findById(id, '*, contacts(*)');
   }
+
+  async findByCnpjInTenant(cnpjDigits: string, tenantId: string, excludeId?: string) {
+    let query = this.query('id')
+      .eq('cnpj', cnpjDigits)
+      .eq('tenant_id', tenantId);
+
+    if (excludeId) {
+      query = query.neq('id', excludeId);
+    }
+
+    const { data, error } = await query.limit(1);
+    if (error) throw error;
+    return data?.[0] ?? null;
+  }
 }

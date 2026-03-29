@@ -1,9 +1,10 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, NotFoundException, ConflictException } from '@nestjs/common';
 import { AuthenticatedUser } from '../../common/types';
 import { CreateCompanyDto } from './dto/create-company.dto';
 import { UpdateCompanyDto } from './dto/update-company.dto';
 import { CompaniesRepository } from './companies.repository';
 import { BrasilApiService } from '../brasilapi/brasilapi.service';
+import { cleanCnpj } from '../../utils';
 
 @Injectable()
 export class CompaniesService {
@@ -23,14 +24,42 @@ export class CompaniesService {
   }
 
   async create(dto: CreateCompanyDto, currentUser: AuthenticatedUser) {
+    const tenantId = currentUser.tenantId ?? currentUser.id;
+    const cnpjDigits = cleanCnpj(dto.cnpj);
+
+    const existing = await this.companiesRepository.findByCnpjInTenant(cnpjDigits, tenantId);
+    if (existing) {
+      throw new ConflictException('Já existe uma empresa com este CNPJ neste tenant');
+    }
+
     return this.companiesRepository.create({
       ...dto,
+      cnpj: cnpjDigits,
       created_by: currentUser.id,
-      tenant_id: currentUser.tenantId ?? currentUser.id,
+      tenant_id: tenantId,
     });
   }
 
-  async update(id: string, dto: UpdateCompanyDto) {
+  async update(id: string, dto: UpdateCompanyDto, currentUser: AuthenticatedUser) {
+    if (dto.cnpj) {
+      const company = await this.companiesRepository.findWithContacts(id);
+      if (!company) throw new NotFoundException('Company not found');
+
+      const tenantId = company.tenant_id ?? currentUser.tenantId ?? currentUser.id;
+      const cnpjDigits = cleanCnpj(dto.cnpj);
+
+      const existing = await this.companiesRepository.findByCnpjInTenant(cnpjDigits, tenantId, id);
+      if (existing) {
+        throw new ConflictException('Já existe uma empresa com este CNPJ neste tenant');
+      }
+
+      return this.companiesRepository.update(id, {
+        ...dto,
+        cnpj: cnpjDigits,
+        updated_at: new Date().toISOString(),
+      });
+    }
+
     return this.companiesRepository.update(id, {
       ...dto,
       updated_at: new Date().toISOString(),

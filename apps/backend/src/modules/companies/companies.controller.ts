@@ -61,8 +61,12 @@ export class CompaniesController {
 
   @Put(":id")
   @ApiOperation({ summary: "Update company details by ID" })
-  update(@Param("id") id: string, @Body() dto: UpdateCompanyDto) {
-    return this.companiesService.update(id, dto);
+  update(
+    @Param("id") id: string,
+    @Body() dto: UpdateCompanyDto,
+    @User() user: AuthenticatedUser,
+  ) {
+    return this.companiesService.update(id, dto, user);
   }
 
   @Delete(":id")
