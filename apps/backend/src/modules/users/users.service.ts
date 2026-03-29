@@ -12,13 +12,11 @@ export class UsersService {
   constructor(private readonly usersRepository: UsersRepository) {}
 
   async findAll(currentUser: AuthenticatedUser) {
-    if (currentUser.role === UserRole.ADMIN) {
+    if (currentUser.role === UserRole.ADMIN || currentUser.role === UserRole.MANAGER) {
       return this.usersRepository.findAll();
     }
-    if (currentUser.role === UserRole.MANAGER) {
-      return this.usersRepository.findByManager(currentUser.id);
-    }
-    return this.findOne(currentUser.id, currentUser);
+    const user = await this.usersRepository.findById(currentUser.id);
+    return user ? [user] : [];
   }
 
   async findOne(id: string, currentUser: AuthenticatedUser) {

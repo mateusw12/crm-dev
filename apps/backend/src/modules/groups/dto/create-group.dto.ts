@@ -9,6 +9,6 @@ export class CreateGroupDto {
   @IsString()
   description?: string;
 
-  @IsUUID()
+  @IsString()
   managerId: string;
 }
