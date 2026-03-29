@@ -25,16 +25,16 @@ let defaults: {
   updateCancel?: string;
 } = {};
 
-export function registerConfirmHandler(h: ConfirmHandler) {
-  handler = h;
+export function registerConfirmHandler(confirmHandler: ConfirmHandler) {
+  handler = confirmHandler;
 }
 
 export function unregisterConfirmHandler() {
   handler = null;
 }
 
-export function setDefaultConfirmTexts(d: typeof defaults) {
-  defaults = { ...defaults, ...d };
+export function setDefaultConfirmTexts(overrideDefaults: typeof defaults) {
+  defaults = { ...defaults, ...overrideDefaults };
 }
 
 export async function showConfirmGeneric(opts: ConfirmOptions): Promise<boolean> {

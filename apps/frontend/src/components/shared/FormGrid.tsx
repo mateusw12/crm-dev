@@ -5,6 +5,7 @@ import { Input, Space } from 'antd';
 import type { TableProps, TableColumnsType } from 'antd';
 import { GridView } from './GridView';
 import { AddButton, EditButton, RemoveButton } from './buttons';
+import { showConfirmDelete } from './confirm/confirmService';
 
 type FormGridProps<T extends object> = {
   dataSource: T[];
@@ -22,7 +23,6 @@ type FormGridProps<T extends object> = {
 
   // labels / text
   addButtonLabel?: string;
-  deleteConfirmTitle?: string;
   searchPlaceholder?: string;
 
   // callbacks
@@ -44,7 +44,6 @@ export function FormGrid<T extends { id?: string }>({
   showEditButton = true,
   showRemoveButton = true,
   addButtonLabel = 'Add',
-  deleteConfirmTitle = 'Are you sure?',
   searchPlaceholder = 'Search...',
   onAdd,
   onEdit,
@@ -80,8 +79,10 @@ export function FormGrid<T extends { id?: string }>({
         {showRemoveButton && (
           <RemoveButton
             showLabel={false}
-            confirmTitle={deleteConfirmTitle}
-            onClick={() => onRemove?.(record)}
+            onClick={async () => {
+              const confirmed = await showConfirmDelete();
+              if (confirmed) onRemove?.(record);
+            }}
           />
         )}
       </div>
