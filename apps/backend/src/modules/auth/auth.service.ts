@@ -21,7 +21,8 @@ export class AuthService {
   async getOrCreateUser(payload: JwtPayload) {
     try {
       return await this.authRepository.findOrCreateUser(payload);
-    } catch {
+    } catch (err) {
+      console.error('[AuthService] getOrCreateUser failed:', err);
       throw new UnauthorizedException('Failed to create user');
     }
   }

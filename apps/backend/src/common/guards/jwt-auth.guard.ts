@@ -24,9 +24,6 @@ export class JwtAuthGuard implements CanActivate {
       const secret = this.configService.get<string>('JWT_SECRET');
       const payload = await this.jwtService.verifyAsync<JwtPayload>(token, { secret });
 
-      // Sync the user with the DB on every request:
-      // - Creates the user (role=USER) if this is their first login
-      // - Reads the actual role from DB so RBAC always reflects DB state
       const dbUser = await this.authService.getOrCreateUser(payload);
 
       const user: AuthenticatedUser = {
@@ -42,6 +39,7 @@ export class JwtAuthGuard implements CanActivate {
       return true;
     } catch (err) {
       if (err instanceof UnauthorizedException) throw err;
+      console.error('[JwtAuthGuard] Error:', err);
       throw new UnauthorizedException('Invalid or expired token');
     }
   }

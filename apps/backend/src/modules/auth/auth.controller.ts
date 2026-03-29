@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, UseGuards } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { User } from '../../common/decorators/current-user.decorator';
@@ -11,6 +11,12 @@ export class AuthController {
   @Get('me')
   @UseGuards(JwtAuthGuard)
   async me(@User() user: AuthenticatedUser) {
+    return this.authService.me(user.id);
+  }
+
+  @Post('signin')
+  @UseGuards(JwtAuthGuard)
+  async signIn(@User() user: AuthenticatedUser) {
     return this.authService.me(user.id);
   }
 }

@@ -35,6 +35,20 @@ const handler = NextAuth({
           .setIssuedAt()
           .setExpirationTime('7d')
           .sign(secret);
+
+        // Sync the user with the backend on first login so the record is
+        // created in Supabase before any page makes an API call.
+        try {
+          const apiUrl =
+            process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001/api';
+          await fetch(`${apiUrl}/auth/signin`, {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${token.accessToken}` },
+          });
+        } catch {
+          console.error('Failed to sync user with backend on sign-in');
+          // Non-blocking: user will be created on the first protected API call
+        }
       }
       return token;
     },
