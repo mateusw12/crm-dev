@@ -1,0 +1,9 @@
+export { AuthService } from './auth.service';
+export { CompaniesService } from './companies.service';
+export { ContactsService } from './contacts.service';
+export { DashboardService } from './dashboard.service';
+export { DealsService } from './deals.service';
+export { GroupsService } from './groups.service';
+export { InteractionsService } from './interactions.service';
+export { NotificationsService } from './notifications.service';
+export { TasksService } from './tasks.service';
