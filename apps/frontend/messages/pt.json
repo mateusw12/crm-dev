@@ -1,0 +1,145 @@
+{
+  "common": {
+    "loading": "Carregando...",
+    "save": "Salvar",
+    "cancel": "Cancelar",
+    "delete": "Excluir",
+    "edit": "Editar",
+    "create": "Criar",
+    "search": "Buscar",
+    "filter": "Filtrar",
+    "actions": "Ações",
+    "confirm": "Confirmar",
+    "yes": "Sim",
+    "no": "Não",
+    "close": "Fechar",
+    "back": "Voltar",
+    "next": "Próximo",
+    "previous": "Anterior",
+    "total": "Total",
+    "noData": "Nenhum dado encontrado",
+    "success": "Sucesso",
+    "error": "Erro",
+    "name": "Nome",
+    "email": "E-mail",
+    "phone": "Telefone",
+    "notes": "Observações",
+    "date": "Data",
+    "status": "Status",
+    "type": "Tipo",
+    "description": "Descrição",
+    "value": "Valor",
+    "title": "Título",
+    "createdAt": "Criado em",
+    "updatedAt": "Atualizado em"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "contacts": "Contatos",
+    "companies": "Empresas",
+    "deals": "Pipeline",
+    "tasks": "Tarefas",
+    "calendar": "Agenda",
+    "groups": "Grupos",
+    "settings": "Configurações",
+    "logout": "Sair"
+  },
+  "auth": {
+    "signIn": "Entrar",
+    "signOut": "Sair",
+    "signInWith": "Entrar com {provider}",
+    "welcomeBack": "Bem-vindo de volta!",
+    "signInDescription": "Entre para acessar seu CRM"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "totalContacts": "Total de Contatos",
+    "totalDeals": "Total de Negócios",
+    "openDeals": "Negócios Abertos",
+    "pipelineValue": "Valor do Pipeline",
+    "wonValue": "Valor Ganho",
+    "conversionRate": "Taxa de Conversão",
+    "overdueTasks": "Tarefas Atrasadas",
+    "dealsByStatus": "Negócios por Status"
+  },
+  "contacts": {
+    "title": "Contatos",
+    "new": "Novo Contato",
+    "edit": "Editar Contato",
+    "delete": "Excluir Contato",
+    "deleteConfirm": "Tem certeza que deseja excluir este contato?",
+    "company": "Empresa",
+    "interactions": "Interações",
+    "deals": "Negócios",
+    "tasks": "Tarefas"
+  },
+  "companies": {
+    "title": "Empresas",
+    "new": "Nova Empresa",
+    "edit": "Editar Empresa",
+    "delete": "Excluir Empresa",
+    "deleteConfirm": "Tem certeza que deseja excluir esta empresa?",
+    "industry": "Setor",
+    "website": "Website",
+    "address": "Endereço",
+    "contacts": "Contatos"
+  },
+  "deals": {
+    "title": "Pipeline",
+    "new": "Novo Negócio",
+    "edit": "Editar Negócio",
+    "delete": "Excluir Negócio",
+    "deleteConfirm": "Tem certeza que deseja excluir este negócio?",
+    "contact": "Contato",
+    "status": {
+      "LEAD": "Lead",
+      "CONTACTED": "Contatado",
+      "PROPOSAL": "Proposta",
+      "NEGOTIATION": "Negociação",
+      "WON": "Ganho",
+      "LOST": "Perdido"
+    }
+  },
+  "interactions": {
+    "title": "Interações",
+    "new": "Registrar Interação",
+    "edit": "Editar Interação",
+    "type": {
+      "CALL": "Ligação",
+      "EMAIL": "E-mail",
+      "MEETING": "Reunião"
+    }
+  },
+  "tasks": {
+    "title": "Tarefas",
+    "new": "Nova Tarefa",
+    "edit": "Editar Tarefa",
+    "delete": "Excluir Tarefa",
+    "deleteConfirm": "Tem certeza que deseja excluir esta tarefa?",
+    "dueDate": "Data de Vencimento",
+    "status": {
+      "PENDING": "Pendente",
+      "DONE": "Concluída"
+    },
+    "markDone": "Marcar como Concluída",
+    "overdue": "Atrasada"
+  },
+  "groups": {
+    "title": "Grupos",
+    "new": "Novo Grupo",
+    "edit": "Editar Grupo",
+    "members": "Membros",
+    "addMember": "Adicionar Membro",
+    "removeMember": "Remover Membro",
+    "manager": "Gerente"
+  },
+  "profile": {
+    "title": "Perfil",
+    "role": "Perfil",
+    "roles": {
+      "USER": "Usuário",
+      "MANAGER": "Gerente",
+      "ADMIN": "Administrador"
+    }
+  }
+}

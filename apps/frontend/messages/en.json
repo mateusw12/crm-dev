@@ -1,0 +1,145 @@
+{
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "search": "Search",
+    "filter": "Filter",
+    "actions": "Actions",
+    "confirm": "Confirm",
+    "yes": "Yes",
+    "no": "No",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "total": "Total",
+    "noData": "No data found",
+    "success": "Success",
+    "error": "Error",
+    "name": "Name",
+    "email": "Email",
+    "phone": "Phone",
+    "notes": "Notes",
+    "date": "Date",
+    "status": "Status",
+    "type": "Type",
+    "description": "Description",
+    "value": "Value",
+    "title": "Title",
+    "createdAt": "Created At",
+    "updatedAt": "Updated At"
+  },
+  "nav": {
+    "dashboard": "Dashboard",
+    "contacts": "Contacts",
+    "companies": "Companies",
+    "deals": "Pipeline",
+    "tasks": "Tasks",
+    "calendar": "Calendar",
+    "groups": "Groups",
+    "settings": "Settings",
+    "logout": "Logout"
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "signInWith": "Sign in with {provider}",
+    "welcomeBack": "Welcome back!",
+    "signInDescription": "Sign in to access your CRM"
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "totalContacts": "Total Contacts",
+    "totalDeals": "Total Deals",
+    "openDeals": "Open Deals",
+    "pipelineValue": "Pipeline Value",
+    "wonValue": "Won Value",
+    "conversionRate": "Conversion Rate",
+    "overdueTasks": "Overdue Tasks",
+    "dealsByStatus": "Deals by Status"
+  },
+  "contacts": {
+    "title": "Contacts",
+    "new": "New Contact",
+    "edit": "Edit Contact",
+    "delete": "Delete Contact",
+    "deleteConfirm": "Are you sure you want to delete this contact?",
+    "company": "Company",
+    "interactions": "Interactions",
+    "deals": "Deals",
+    "tasks": "Tasks"
+  },
+  "companies": {
+    "title": "Companies",
+    "new": "New Company",
+    "edit": "Edit Company",
+    "delete": "Delete Company",
+    "deleteConfirm": "Are you sure you want to delete this company?",
+    "industry": "Industry",
+    "website": "Website",
+    "address": "Address",
+    "contacts": "Contacts"
+  },
+  "deals": {
+    "title": "Pipeline",
+    "new": "New Deal",
+    "edit": "Edit Deal",
+    "delete": "Delete Deal",
+    "deleteConfirm": "Are you sure you want to delete this deal?",
+    "contact": "Contact",
+    "status": {
+      "LEAD": "Lead",
+      "CONTACTED": "Contacted",
+      "PROPOSAL": "Proposal",
+      "NEGOTIATION": "Negotiation",
+      "WON": "Won",
+      "LOST": "Lost"
+    }
+  },
+  "interactions": {
+    "title": "Interactions",
+    "new": "Log Interaction",
+    "edit": "Edit Interaction",
+    "type": {
+      "CALL": "Call",
+      "EMAIL": "Email",
+      "MEETING": "Meeting"
+    }
+  },
+  "tasks": {
+    "title": "Tasks",
+    "new": "New Task",
+    "edit": "Edit Task",
+    "delete": "Delete Task",
+    "deleteConfirm": "Are you sure you want to delete this task?",
+    "dueDate": "Due Date",
+    "status": {
+      "PENDING": "Pending",
+      "DONE": "Done"
+    },
+    "markDone": "Mark as Done",
+    "overdue": "Overdue"
+  },
+  "groups": {
+    "title": "Groups",
+    "new": "New Group",
+    "edit": "Edit Group",
+    "members": "Members",
+    "addMember": "Add Member",
+    "removeMember": "Remove Member",
+    "manager": "Manager"
+  },
+  "profile": {
+    "title": "Profile",
+    "role": "Role",
+    "roles": {
+      "USER": "User",
+      "MANAGER": "Manager",
+      "ADMIN": "Admin"
+    }
+  }
+}
