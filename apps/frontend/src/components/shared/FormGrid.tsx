@@ -30,6 +30,8 @@ type FormGridProps<T extends object> = {
   onEdit?: (record: T) => void;
   onRemove?: (record: T) => void;
   onSearch?: (value: string) => void;
+  // extra content rendered in the toolbar between Add and Search
+  extraToolbar?: React.ReactNode;
 };
 
 export function FormGrid<T extends { id?: string }>({
@@ -49,6 +51,7 @@ export function FormGrid<T extends { id?: string }>({
   onEdit,
   onRemove,
   onSearch,
+  extraToolbar,
 }: FormGridProps<T>) {
   const [searchValue, setSearchValue] = useState('');
 
@@ -113,6 +116,7 @@ export function FormGrid<T extends { id?: string }>({
               <AddButton label={addButtonLabel} onClick={onAdd} />
             )}
           </div>
+          {extraToolbar && <div>{extraToolbar}</div>}
           <div>
             <Input.Search
               placeholder={searchPlaceholder}

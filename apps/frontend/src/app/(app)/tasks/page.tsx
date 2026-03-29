@@ -1,18 +1,8 @@
-"use client";
+﻿"use client";
 
 import { useState } from "react";
-import {
-  Button,
-  Table,
-  Space,
-  Popconfirm,
-  Tag,
-  Typography,
-  App,
-  Select,
-  Checkbox,
-} from "antd";
-import { PlusOutlined, EditOutlined, DeleteOutlined } from "@ant-design/icons";
+import { Tag, Checkbox, App, Select } from "antd";
+import type { TableColumnsType } from "antd";
 import { useTranslations } from "next-intl";
 import useSWR from "swr";
 import type { TaskResponse } from "@/lib/dto";
@@ -20,8 +10,7 @@ import { TaskStatus } from "@/lib/dto";
 import { TaskModal } from "@/components/tasks/TaskModal";
 import { format } from "date-fns";
 import { TasksService } from "@/lib/services/index";
-
-const { Title } = Typography;
+import { FormGrid } from "@/components/shared/FormGrid";
 
 export default function TasksPage() {
   const t = useTranslations("tasks");
@@ -31,17 +20,14 @@ export default function TasksPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingTask, setEditingTask] = useState<TaskResponse | null>(null);
 
-  const {
-    data: tasks = [],
-    isLoading,
-    mutate,
-  } = useSWR(["tasks", status], () =>
-    TasksService.getAll(status ? { status } : {}),
+  const { data: tasks = [], isLoading, mutate } = useSWR(
+    ["tasks", status],
+    () => TasksService.getAll(status ? { status } : {}),
   );
 
-  const handleDelete = async (id: string) => {
+  const handleRemove = async (record: TaskResponse) => {
     try {
-      await TasksService.delete(id);
+      await TasksService.delete(record.id);
       message.success(tCommon("success"));
       mutate();
     } catch {
@@ -65,7 +51,7 @@ export default function TasksPage() {
     task.due_date &&
     new Date(task.due_date) < new Date();
 
-  const columns = [
+  const columns: TableColumnsType<TaskResponse> = [
     {
       title: "",
       key: "checkbox",
@@ -81,6 +67,7 @@ export default function TasksPage() {
       title: tCommon("title"),
       dataIndex: "title",
       key: "title",
+      sorter: (a, b) => a.title.localeCompare(b.title),
       render: (text: string, record: TaskResponse) => (
         <span
           style={{
@@ -99,8 +86,8 @@ export default function TasksPage() {
     },
     {
       title: t("dueDate"),
-      dataIndex: "dueDate",
-      key: "dueDate",
+      dataIndex: "due_date",
+      key: "due_date",
       render: (v: string) => (v ? format(new Date(v), "dd/MM/yyyy") : "—"),
     },
     {
@@ -111,84 +98,39 @@ export default function TasksPage() {
         <Tag color={v === "DONE" ? "green" : "orange"}>{t(`status.${v}`)}</Tag>
       ),
     },
-    {
-      title: tCommon("actions"),
-      key: "actions",
-      render: (_: unknown, record: TaskResponse) => (
-        <Space>
-          <Button
-            type="text"
-            icon={<EditOutlined />}
-            onClick={() => {
-              setEditingTask(record);
-              setModalOpen(true);
-            }}
-          />
-          <Popconfirm
-            title={t("deleteConfirm")}
-            onConfirm={() => handleDelete(record.id)}
-            okText={tCommon("yes")}
-            cancelText={tCommon("no")}
-          >
-            <Button type="text" danger icon={<DeleteOutlined />} />
-          </Popconfirm>
-        </Space>
-      ),
-    },
   ];
 
   return (
-    <div>
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "space-between",
-          marginBottom: 24,
-        }}
-      >
-        <Title level={3} style={{ margin: 0 }}>
-          {t("title")}
-        </Title>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => {
-            setEditingTask(null);
-            setModalOpen(true);
-          }}
-        >
-          {t("new")}
-        </Button>
-      </div>
-
-      <Select
-        allowClear
-        placeholder={tCommon("filter")}
-        style={{ marginBottom: 16, width: 160 }}
-        onChange={setStatus}
-        options={[
-          { value: "PENDING", label: t("status.PENDING") },
-          { value: "DONE", label: t("status.DONE") },
-        ]}
-      />
-
-      <Table
+    <>
+      <FormGrid<TaskResponse>
         dataSource={tasks}
         columns={columns}
-        rowKey="id"
         loading={isLoading}
-        style={{ background: "#fff", borderRadius: 12 }}
+        addButtonLabel={t("new")}
+        searchPlaceholder={tCommon("search")}
+        onAdd={() => { setEditingTask(null); setModalOpen(true); }}
+        onEdit={(record) => { setEditingTask(record); setModalOpen(true); }}
+        onRemove={handleRemove}
+        extraToolbar={
+          <Select
+            allowClear
+            placeholder={tCommon("filter")}
+            style={{ width: 160 }}
+            onChange={setStatus}
+            options={[
+              { value: "PENDING", label: t("status.PENDING") },
+              { value: "DONE", label: t("status.DONE") },
+            ]}
+          />
+        }
       />
 
       <TaskModal
         open={modalOpen}
         task={editingTask}
         onClose={() => setModalOpen(false)}
-        onSuccess={() => {
-          setModalOpen(false);
-          mutate();
-        }}
+        onSuccess={() => { setModalOpen(false); mutate(); }}
       />
-    </div>
+    </>
   );
 }

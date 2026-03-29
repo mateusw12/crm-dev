@@ -93,7 +93,6 @@ export default function ContactsPage() {
         }}
         showAddButton
         addButtonLabel={t('new')}
-        deleteConfirmTitle={t('deleteConfirm')}
         searchPlaceholder={tCommon('search')}
         onAdd={() => { setEditingContact(null); setModalOpen(true); }}
         onEdit={(record) => { setEditingContact(record); setModalOpen(true); }}

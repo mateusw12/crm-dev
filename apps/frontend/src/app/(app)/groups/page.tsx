@@ -10,7 +10,6 @@ import type { GroupResponse } from '@/lib/dto';
 import { GroupModal } from '@/components/groups/GroupModal';
 import { GroupsService } from '@/lib/services/groups.service';
 import { FormGrid } from '@/components/shared/FormGrid';
-import { showConfirmDelete } from '@/components/shared/confirm/confirmService';
 
 export default function GroupsPage() {
   const t = useTranslations('groups');
@@ -35,8 +34,6 @@ export default function GroupsPage() {
   };
 
   const handleRemove = async (record: GroupResponse) => {
-    const confirmed = await showConfirmDelete();
-    if (!confirmed) return;
     try {
       await GroupsService.delete(record.id);
       message.success(tCommon('success'));
@@ -88,7 +85,6 @@ export default function GroupsPage() {
         columns={columns}
         loading={isLoading}
         addButtonLabel={t('new')}
-        deleteConfirmTitle={tCommon('confirm')}
         searchPlaceholder={tCommon('search')}
         onAdd={handleAdd}
         onEdit={handleEdit}
