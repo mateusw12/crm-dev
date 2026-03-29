@@ -9,8 +9,12 @@ import { GroupsService } from "@/lib/services/groups.service";
 import { UsersService } from "@/lib/services/users.service";
 import { AuthService } from "@/lib/services/auth.service";
 import { Modal } from "@/components/shared/modal/Modal";
-import { showSuccess, showUpdate } from "@/components/shared/notification/notificationService";
+import {
+  showSuccess,
+  showUpdate,
+} from "@/components/shared/notification/notificationService";
 import { handleApiError } from "@/lib/api";
+import { showConfirmUpdate } from "../shared/confirm/confirmService";
 
 interface GroupModalProps {
   open: boolean;
@@ -63,6 +67,9 @@ export function GroupModal({
       let savedGroup: GroupResponse;
 
       if (group) {
+        const confirmed = await showConfirmUpdate();
+        if (!confirmed) return;
+        
         savedGroup = await GroupsService.update(group.id, values);
         showUpdate();
 

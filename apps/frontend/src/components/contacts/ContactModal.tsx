@@ -1,15 +1,19 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { Form, Input, Select } from 'antd';
-import { useTranslations } from 'next-intl';
-import useSWR from 'swr';
-import type { ContactResponse } from '@/lib/dto';
-import { CompaniesService } from '@/lib/services/companies.service';
-import { ContactsService } from '@/lib/services/contacts.service';
-import { Modal } from '@/components/shared/modal/Modal';
-import { showSuccess, showUpdate } from '@/components/shared/notification/notificationService';
-import { handleApiError } from '@/lib/api';
+import { useEffect } from "react";
+import { Form, Input, Select } from "antd";
+import { useTranslations } from "next-intl";
+import useSWR from "swr";
+import type { ContactResponse } from "@/lib/dto";
+import { CompaniesService } from "@/lib/services/companies.service";
+import { ContactsService } from "@/lib/services/contacts.service";
+import { Modal } from "@/components/shared/modal/Modal";
+import {
+  showSuccess,
+  showUpdate,
+} from "@/components/shared/notification/notificationService";
+import { handleApiError } from "@/lib/api";
+import { showConfirmUpdate } from "../shared/confirm/confirmService";
 
 interface ContactModalProps {
   open: boolean;
@@ -18,12 +22,19 @@ interface ContactModalProps {
   onSuccess: () => void;
 }
 
-export function ContactModal({ open, contact, onClose, onSuccess }: ContactModalProps) {
+export function ContactModal({
+  open,
+  contact,
+  onClose,
+  onSuccess,
+}: ContactModalProps) {
   const [form] = Form.useForm();
-  const tCommon = useTranslations('common');
-  const t = useTranslations('contacts');
+  const tCommon = useTranslations("common");
+  const t = useTranslations("contacts");
 
-  const { data: companies } = useSWR('companies', () => CompaniesService.getAll());
+  const { data: companies } = useSWR("companies", () =>
+    CompaniesService.getAll(),
+  );
 
   useEffect(() => {
     if (open) {
@@ -45,6 +56,9 @@ export function ContactModal({ open, contact, onClose, onSuccess }: ContactModal
     try {
       const values = await form.validateFields();
       if (contact) {
+        const confirmed = await showConfirmUpdate();
+        if (!confirmed) return;
+        
         await ContactsService.update(contact.id, values);
         showUpdate();
       } else {
@@ -61,36 +75,43 @@ export function ContactModal({ open, contact, onClose, onSuccess }: ContactModal
   return (
     <Modal
       open={open}
-      title={contact ? t('edit') : t('new')}
+      title={contact ? t("edit") : t("new")}
       onCancel={onClose}
       onSave={handleSubmit}
-      saveLabel={tCommon('save')}
-      cancelLabel={tCommon('cancel')}
+      saveLabel={tCommon("save")}
+      cancelLabel={tCommon("cancel")}
       width={560}
     >
       <Form form={form} layout="vertical" style={{ marginTop: 16 }}>
         <Form.Item
           name="name"
-          label={tCommon('name')}
-          rules={[{ required: true, message: 'Name is required' }]}
+          label={tCommon("name")}
+          rules={[{ required: true, message: "Name is required" }]}
         >
           <Input />
         </Form.Item>
-        <Form.Item name="email" label={tCommon('email')} rules={[{ type: 'email' }]}>
+        <Form.Item
+          name="email"
+          label={tCommon("email")}
+          rules={[{ type: "email" }]}
+        >
           <Input />
         </Form.Item>
-        <Form.Item name="phone" label={tCommon('phone')}>
+        <Form.Item name="phone" label={tCommon("phone")}>
           <Input />
         </Form.Item>
-        <Form.Item name="companyId" label={t('company')}>
+        <Form.Item name="companyId" label={t("company")}>
           <Select
             allowClear
             showSearch
             optionFilterProp="label"
-            options={(companies?.data ?? []).map((item) => ({ value: item.id, label: item.name }))}
+            options={(companies?.data ?? []).map((item) => ({
+              value: item.id,
+              label: item.name,
+            }))}
           />
         </Form.Item>
-        <Form.Item name="notes" label={tCommon('notes')}>
+        <Form.Item name="notes" label={tCommon("notes")}>
           <Input.TextArea rows={4} />
         </Form.Item>
       </Form>

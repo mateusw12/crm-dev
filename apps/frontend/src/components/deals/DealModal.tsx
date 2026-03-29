@@ -8,8 +8,12 @@ import type { DealResponse } from "@/lib/dto";
 import { DealStatus } from "@/lib/dto";
 import { ContactsService, DealsService } from "@/lib/services/index";
 import { Modal } from "@/components/shared/modal/Modal";
-import { showSuccess, showUpdate } from "@/components/shared/notification/notificationService";
+import {
+  showSuccess,
+  showUpdate,
+} from "@/components/shared/notification/notificationService";
 import { handleApiError } from "@/lib/api";
+import { showConfirmUpdate } from "../shared/confirm/confirmService";
 
 interface DealModalProps {
   open: boolean;
@@ -56,6 +60,9 @@ export function DealModal({ open, deal, onClose, onSuccess }: DealModalProps) {
     try {
       const values = await form.validateFields();
       if (deal) {
+        const confirmed = await showConfirmUpdate();
+        if (!confirmed) return;
+        
         await DealsService.update(deal.id, values);
         showUpdate();
       } else {

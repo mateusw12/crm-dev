@@ -1,14 +1,18 @@
-'use client';
+"use client";
 
-import { useEffect } from 'react';
-import { Form, Input, Select, DatePicker } from 'antd';
-import { useTranslations } from 'next-intl';
-import dayjs from 'dayjs';
-import type { InteractionResponse } from '@/lib/dto';
-import { InteractionsService } from '@/lib/services/index';
-import { Modal } from '@/components/shared/modal/Modal';
-import { showSuccess, showUpdate } from '@/components/shared/notification/notificationService';
-import { handleApiError } from '@/lib/api';
+import { useEffect } from "react";
+import { Form, Input, Select, DatePicker } from "antd";
+import { useTranslations } from "next-intl";
+import dayjs from "dayjs";
+import type { InteractionResponse } from "@/lib/dto";
+import { InteractionsService } from "@/lib/services/index";
+import { Modal } from "@/components/shared/modal/Modal";
+import {
+  showSuccess,
+  showUpdate,
+} from "@/components/shared/notification/notificationService";
+import { handleApiError } from "@/lib/api";
+import { showConfirmUpdate } from "../shared/confirm/confirmService";
 
 interface InteractionModalProps {
   open: boolean;
@@ -18,7 +22,7 @@ interface InteractionModalProps {
   onSuccess: () => void;
 }
 
-const INTERACTION_TYPES = ['CALL', 'EMAIL', 'MEETING'];
+const INTERACTION_TYPES = ["CALL", "EMAIL", "MEETING"];
 
 export function InteractionModal({
   open,
@@ -28,8 +32,8 @@ export function InteractionModal({
   onSuccess,
 }: InteractionModalProps) {
   const [form] = Form.useForm();
-  const tCommon = useTranslations('common');
-  const t = useTranslations('interactions');
+  const tCommon = useTranslations("common");
+  const t = useTranslations("interactions");
 
   useEffect(() => {
     if (open) {
@@ -41,7 +45,7 @@ export function InteractionModal({
         });
       } else {
         form.resetFields();
-        form.setFieldValue('date', dayjs());
+        form.setFieldValue("date", dayjs());
       }
     }
   }, [open, interaction, form]);
@@ -55,6 +59,9 @@ export function InteractionModal({
         contactId,
       };
       if (interaction) {
+        const confirmed = await showConfirmUpdate();
+        if (!confirmed) return;
+        
         await InteractionsService.update(interaction.id, payload);
         showUpdate();
       } else {
@@ -71,16 +78,16 @@ export function InteractionModal({
   return (
     <Modal
       open={open}
-      title={interaction ? t('edit') : t('new')}
+      title={interaction ? t("edit") : t("new")}
       onCancel={onClose}
       onSave={handleSubmit}
-      saveLabel={tCommon('save')}
-      cancelLabel={tCommon('cancel')}
+      saveLabel={tCommon("save")}
+      cancelLabel={tCommon("cancel")}
     >
       <Form form={form} layout="vertical" style={{ marginTop: 16 }}>
         <Form.Item
           name="type"
-          label={tCommon('type')}
+          label={tCommon("type")}
           rules={[{ required: true }]}
         >
           <Select
@@ -90,12 +97,16 @@ export function InteractionModal({
             }))}
           />
         </Form.Item>
-        <Form.Item name="date" label={tCommon('date')} rules={[{ required: true }]}>
-          <DatePicker showTime style={{ width: '100%' }} />
+        <Form.Item
+          name="date"
+          label={tCommon("date")}
+          rules={[{ required: true }]}
+        >
+          <DatePicker showTime style={{ width: "100%" }} />
         </Form.Item>
         <Form.Item
           name="description"
-          label={tCommon('description')}
+          label={tCommon("description")}
           rules={[{ required: true }]}
         >
           <Input.TextArea rows={4} />
