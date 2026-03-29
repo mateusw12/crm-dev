@@ -14,7 +14,7 @@ export class CompaniesRepository extends BaseRepository {
     currentUser: AuthenticatedUser,
     filters: { search?: string; page?: number; limit?: number },
   ): Promise<PaginatedResult<any>> {
-    const page = filters.page ?? 1;
+    const page = filters.page ?? null;
     const limit = filters.limit ?? 20;
 
     let query = this.queryPaginated('*, contacts(id, name, email)').order('created_at', { ascending: false });
@@ -29,8 +29,10 @@ export class CompaniesRepository extends BaseRepository {
       query = query.ilike('name', `%${filters.search}%`);
     }
 
-    const from = (page - 1) * limit;
-    query = query.range(from, from + limit - 1);
+    if (page !== null) {
+      const from = (page - 1) * limit;
+      query = query.range(from, from + limit - 1);
+    }
 
     const { data, error, count } = await query;
     if (error) throw error;

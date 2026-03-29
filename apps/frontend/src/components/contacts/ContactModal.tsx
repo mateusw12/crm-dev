@@ -34,8 +34,10 @@ export function ContactModal({
   const t = useTranslations("contacts");
   const avatarUrlRef = useRef<string | undefined>(contact?.avatar_url);
 
-  const { data: companies } = useSWR("companies", () =>
-    CompaniesService.getAll(),
+  const { data: companies } = useSWR(
+    "companies-selector",
+    () => CompaniesService.getAll({ limit: 200 }),
+    { revalidateOnFocus: false },
   );
 
   useEffect(() => {
