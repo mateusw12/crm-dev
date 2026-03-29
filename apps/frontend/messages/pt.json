@@ -85,7 +85,12 @@
     "industry": "Setor",
     "website": "Website",
     "address": "Endereço",
-    "contacts": "Contatos"
+    "contacts": "Contatos",
+    "cnpj": "CNPJ",
+    "cep": "CEP",
+    "cnpjInvalid": "CNPJ inválido",
+    "cepNotFound": "CEP não encontrado",
+    "cepSearching": "Buscando CEP..."
   },
   "deals": {
     "title": "Pipeline",

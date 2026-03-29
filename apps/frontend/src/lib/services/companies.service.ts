@@ -4,6 +4,7 @@ import type {
   UpdateCompanyDto,
   CompanyResponse,
   CompanyDetailResponse,
+  CepResponse,
   DeletedResponse,
   GetCompaniesParams,
 } from '../dto';
@@ -29,5 +30,9 @@ export class CompaniesService {
 
   static async delete(id: string) {
     return http.delete<DeletedResponse>(`${API_BASE}/${id}`);
+  }
+
+  static async lookupCep(cep: string) {
+    return http.get<CepResponse>(`${API_BASE}/cep/${cep.replace(/\D/g, '')}`);
   }
 }

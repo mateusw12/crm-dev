@@ -6,6 +6,8 @@ export interface GetCompaniesParams {
 
 export interface CreateCompanyDto {
   name: string;
+  cnpj: string;
+  cep: string;
   industry?: string;
   website?: string;
   phone?: string;
@@ -18,6 +20,8 @@ export type UpdateCompanyDto = Partial<CreateCompanyDto>;
 export interface CompanyResponse {
   id: string;
   name: string;
+  cnpj?: string;
+  cep?: string;
   industry?: string;
   website?: string;
   phone?: string;
@@ -27,6 +31,15 @@ export interface CompanyResponse {
   tenant_id?: string;
   created_at: string;
   updated_at?: string;
+}
+
+export interface CepResponse {
+  cep: string;
+  state: string;
+  city: string;
+  neighborhood: string;
+  street: string;
+  service: string;
 }
 
 export interface CompanyDetailResponse extends CompanyResponse {

@@ -85,7 +85,12 @@
     "industry": "Industry",
     "website": "Website",
     "address": "Address",
-    "contacts": "Contacts"
+    "contacts": "Contacts",
+    "cnpj": "CNPJ",
+    "cep": "ZIP Code",
+    "cnpjInvalid": "Invalid CNPJ",
+    "cepNotFound": "ZIP code not found",
+    "cepSearching": "Looking up ZIP code..."
   },
   "deals": {
     "title": "Pipeline",

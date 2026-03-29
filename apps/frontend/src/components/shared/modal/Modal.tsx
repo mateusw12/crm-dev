@@ -4,6 +4,13 @@ import { Modal as AntModal } from "antd";
 import { ButtonGroup } from "../ButtonGroup";
 import { ModalProps, ModalSize } from "./modal.interface";
 
+const SIZE_MAP: Record<ModalSize, number> = {
+  sm: 340,
+  md: 520,
+  lg: 720,
+  xxl: 1100,
+};
+
 export function Modal({
   open,
   title,
@@ -25,13 +32,6 @@ export function Modal({
   maskClosable = false,
   modalProps,
 }: ModalProps) {
-  const SIZE_MAP: Record<ModalSize, number> = {
-    sm: 300,
-    md: 500,
-    lg: 800,
-    xxl: 1140,
-  };
-
   const resolvedWidth = width ?? SIZE_MAP[size];
 
   return (
