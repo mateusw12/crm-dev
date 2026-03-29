@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { Form, Input, Select } from "antd";
 import { useTranslations } from "next-intl";
 import useSWR from "swr";
@@ -8,6 +8,7 @@ import type { ContactResponse } from "@/lib/dto";
 import { CompaniesService } from "@/lib/services/companies.service";
 import { ContactsService } from "@/lib/services/contacts.service";
 import { Modal } from "@/components/shared/modal/Modal";
+import { AvatarUpload } from "@/components/shared/AvatarUpload";
 import {
   showSuccess,
   showUpdate,
@@ -31,6 +32,7 @@ export function ContactModal({
   const [form] = Form.useForm();
   const tCommon = useTranslations("common");
   const t = useTranslations("contacts");
+  const avatarUrlRef = useRef<string | undefined>(contact?.avatar_url);
 
   const { data: companies } = useSWR("companies", () =>
     CompaniesService.getAll(),
@@ -38,6 +40,7 @@ export function ContactModal({
 
   useEffect(() => {
     if (open) {
+      avatarUrlRef.current = contact?.avatar_url;
       if (contact) {
         form.setFieldsValue({
           name: contact.name,
@@ -55,14 +58,14 @@ export function ContactModal({
   const handleSubmit = async () => {
     try {
       const values = await form.validateFields();
+      const payload = { ...values, avatarUrl: avatarUrlRef.current };
       if (contact) {
         const confirmed = await showConfirmUpdate();
         if (!confirmed) return;
-        
-        await ContactsService.update(contact.id, values);
+        await ContactsService.update(contact.id, payload);
         showUpdate();
       } else {
-        await ContactsService.create(values);
+        await ContactsService.create(payload);
         showSuccess();
       }
       onSuccess();
@@ -83,6 +86,16 @@ export function ContactModal({
       width={560}
     >
       <Form form={form} layout="vertical" style={{ marginTop: 16 }}>
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
+          <AvatarUpload
+            value={contact?.avatar_url}
+            entityType="contacts"
+            entityId={contact?.id ?? "new"}
+            field="avatar"
+            name={contact?.name}
+            onUploaded={(url) => { avatarUrlRef.current = url; }}
+          />
+        </div>
         <Form.Item
           name="name"
           label={tCommon("name")}

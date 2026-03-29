@@ -22,6 +22,7 @@ export interface CreateCompanyDto {
   phone?: string;
   address?: string;
   notes?: string;
+  logoUrl?: string;
 }
 
 export type UpdateCompanyDto = Partial<CreateCompanyDto>;
@@ -36,6 +37,7 @@ export interface CompanyResponse {
   phone?: string;
   address?: string;
   notes?: string;
+  logo_url?: string;
   created_by?: string;
   tenant_id?: string;
   created_at: string;

@@ -16,6 +16,7 @@ export interface CreateContactDto {
   phone?: string;
   companyId?: string;
   notes?: string;
+  avatarUrl?: string;
 }
 
 export type UpdateContactDto = Partial<CreateContactDto>;
@@ -27,6 +28,7 @@ export interface ContactResponse {
   phone?: string;
   company_id?: string;
   notes?: string;
+  avatar_url?: string;
   created_by: string;
   updated_by?: string;
   tenant_id?: string;

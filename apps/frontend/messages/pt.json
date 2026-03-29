@@ -179,6 +179,21 @@
     "updateTitle": "Atualizado",
     "errorTitle": "Erro"
   },
+  "uploads": {
+    "clickToUpload": "Clique para alterar a imagem",
+    "uploadSuccess": "Imagem enviada com sucesso",
+    "uploadError": "Erro ao enviar arquivo",
+    "invalidImageType": "Tipo de arquivo inválido. Use JPEG, PNG, WEBP ou GIF",
+    "fileTooLarge": "Arquivo muito grande. Tamanho máximo: {max}MB",
+    "attachments": "Anexos",
+    "addAttachment": "Adicionar Anexo",
+    "noAttachments": "Nenhum anexo adicionado",
+    "deleteAttachment": "Excluir Anexo",
+    "confirmDelete": "Excluir",
+    "cancel": "Cancelar",
+    "download": "Baixar",
+    "delete": "Excluir"
+  },
   "errors": {
     "default": "Ocorreu um erro. Por favor, tente novamente.",
     "companyNotFound": "Empresa não encontrada",

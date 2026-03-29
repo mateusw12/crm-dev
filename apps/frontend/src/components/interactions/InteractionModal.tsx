@@ -1,12 +1,13 @@
 "use client";
 
 import { useEffect } from "react";
-import { Form, Input, Select, DatePicker } from "antd";
+import { Form, Input, Select, DatePicker, Divider } from "antd";
 import { useTranslations } from "next-intl";
 import dayjs from "dayjs";
 import type { InteractionResponse } from "@/lib/dto";
 import { InteractionsService } from "@/lib/services/index";
 import { Modal } from "@/components/shared/modal/Modal";
+import { AttachmentsPanel } from "@/components/shared/AttachmentsPanel";
 import {
   showSuccess,
   showUpdate,
@@ -112,6 +113,12 @@ export function InteractionModal({
           <Input.TextArea rows={4} />
         </Form.Item>
       </Form>
+      {interaction && (
+        <>
+          <Divider style={{ marginTop: 8 }} />
+          <AttachmentsPanel entityType="interaction" entityId={interaction.id} />
+        </>
+      )}
     </Modal>
   );
 }

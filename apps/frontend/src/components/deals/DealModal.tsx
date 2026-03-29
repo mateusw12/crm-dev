@@ -1,13 +1,14 @@
 "use client";
 
 import { useEffect } from "react";
-import { Form, Input, InputNumber, Select } from "antd";
+import { Form, Input, InputNumber, Select, Divider } from "antd";
 import { useTranslations } from "next-intl";
 import useSWR from "swr";
 import type { DealResponse } from "@/lib/dto";
 import { DealStatus } from "@/lib/dto";
 import { ContactsService, DealsService } from "@/lib/services/index";
 import { Modal } from "@/components/shared/modal/Modal";
+import { AttachmentsPanel } from "@/components/shared/AttachmentsPanel";
 import {
   showSuccess,
   showUpdate,
@@ -128,6 +129,12 @@ export function DealModal({ open, deal, onClose, onSuccess }: DealModalProps) {
           />
         </Form.Item>
       </Form>
+      {deal && (
+        <>
+          <Divider style={{ marginTop: 8 }} />
+          <AttachmentsPanel entityType="deal" entityId={deal.id} />
+        </>
+      )}
     </Modal>
   );
 }

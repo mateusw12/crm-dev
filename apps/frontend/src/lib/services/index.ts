@@ -8,3 +8,5 @@ export * from "./notifications.service";
 export * from "./groups.service";
 export * from "./auth.service";
 export * from "./users.service";
+export * from "./uploads.service";
+export * from "./attachments.service";

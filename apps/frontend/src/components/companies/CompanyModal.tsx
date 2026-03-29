@@ -6,6 +6,7 @@ import { useTranslations } from "next-intl";
 import type { CompanyResponse } from "@/lib/dto";
 import { CompaniesService } from "@/lib/services/index";
 import { Modal } from "@/components/shared/modal/Modal";
+import { AvatarUpload } from "@/components/shared/AvatarUpload";
 import { isValidCnpj, maskCnpj, cleanCnpj } from "@/utils/cnpj";
 import { maskCep, cleanCep, isValidCep } from "@/utils/cep";
 import {
@@ -33,9 +34,11 @@ export function CompanyModal({
   const t = useTranslations("companies");
   const [cepLoading, setCepLoading] = useState(false);
   const cepAbortRef = useRef<AbortController | null>(null);
+  const logoUrlRef = useRef<string | undefined>(company?.logo_url);
 
   useEffect(() => {
     if (open) {
+      logoUrlRef.current = company?.logo_url;
       if (company) {
         form.setFieldsValue({
           ...company,
@@ -76,6 +79,7 @@ export function CompanyModal({
         ...values,
         cnpj: cleanCnpj(values.cnpj),
         cep: cleanCep(values.cep),
+        logoUrl: logoUrlRef.current,
       };
       if (company) {
         const confirmed = await showConfirmUpdate();
@@ -110,6 +114,18 @@ export function CompanyModal({
       size="lg"
     >
       <Form form={form} layout="vertical" style={{ marginTop: 16 }}>
+        <div style={{ display: "flex", justifyContent: "center", marginBottom: 20 }}>
+          <AvatarUpload
+            value={company?.logo_url}
+            entityType="companies"
+            entityId={company?.id ?? "new"}
+            field="logo"
+            shape="square"
+            size={80}
+            name={company?.name}
+            onUploaded={(url) => { logoUrlRef.current = url; }}
+          />
+        </div>
         <Form.Item
           name="name"
           label={tCommon("name")}

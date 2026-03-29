@@ -179,6 +179,21 @@
     "updateTitle": "Updated",
     "errorTitle": "Error"
   },
+  "uploads": {
+    "clickToUpload": "Click to change image",
+    "uploadSuccess": "Image uploaded successfully",
+    "uploadError": "Error uploading file",
+    "invalidImageType": "Invalid file type. Use JPEG, PNG, WEBP or GIF",
+    "fileTooLarge": "File too large. Maximum size: {max}MB",
+    "attachments": "Attachments",
+    "addAttachment": "Add Attachment",
+    "noAttachments": "No attachments added",
+    "deleteAttachment": "Delete Attachment",
+    "confirmDelete": "Delete",
+    "cancel": "Cancel",
+    "download": "Download",
+    "delete": "Delete"
+  },
   "errors": {
     "default": "An error occurred. Please try again.",
     "companyNotFound": "Company not found",

@@ -1,4 +1,4 @@
-import { showError } from '@/components/shared/notification/notificationService';
+import { showError, showGeneric } from '@/components/shared/notification/notificationService';
 
 /**
  * Extracts the error key thrown by the backend (e.g. "error.companyNotFound")
@@ -12,7 +12,14 @@ import { showError } from '@/components/shared/notification/notificationService'
  */
 export function handleApiError(error: unknown): void {
   if (error instanceof Error && error.message) {
-    showError({ messageKey: error.message });
+    const msg = error.message;
+    // Only pass as messageKey if it looks like a backend i18n key
+    if (msg.startsWith('error.')) {
+      showError({ messageKey: msg });
+    } else {
+      // Generic server message — show raw without translation lookup
+      showGeneric({ message: 'Error', description: msg });
+    }
   } else {
     showError();
   }
