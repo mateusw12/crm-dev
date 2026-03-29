@@ -1,7 +1,7 @@
 'use client';
 
 import { Tag } from 'antd';
-import type { DealStatus } from '@/lib/types';
+import type { DealStatus } from '@/lib/dto';
 
 const statusConfig: Record<DealStatus, { color: string; label: string }> = {
   LEAD: { color: 'purple', label: 'Lead' },
