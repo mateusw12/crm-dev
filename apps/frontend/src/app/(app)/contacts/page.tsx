@@ -7,12 +7,19 @@ import {
   Tag,
   Typography,
   Avatar,
+  Dropdown,
 } from 'antd';
+import {
+  DownloadOutlined,
+  UploadOutlined,
+  DownOutlined,
+} from '@ant-design/icons';
 import { useTranslations } from 'next-intl';
 import useSWR from 'swr';
 import { useRouter } from 'next/navigation';
 import type { ContactResponse } from '@/lib/dto';
 import { ContactModal } from '@/components/contacts/ContactModal';
+import { ImportContactsModal } from '@/components/contacts/ImportContactsModal';
 import { ContactsService } from '@/lib/services/index';
 import { FormGrid } from '@/components/shared/FormGrid';
 import { showSuccess } from '@/components/shared/notification/notificationService';
@@ -27,7 +34,9 @@ export default function ContactsPage() {
 
   const [page, setPage] = useState(1);
   const [modalOpen, setModalOpen] = useState(false);
+  const [importOpen, setImportOpen] = useState(false);
   const [editingContact, setEditingContact] = useState<ContactResponse | null>(null);
+  const [exporting, setExporting] = useState(false);
 
   const { data, isLoading, mutate } = useSWR(
     ['contacts', page],
@@ -42,6 +51,17 @@ export default function ContactsPage() {
       mutate();
     } catch (error) {
       handleApiError(error);
+    }
+  };
+
+  const handleExport = async () => {
+    setExporting(true);
+    try {
+      await ContactsService.exportCsv();
+    } catch (error) {
+      handleApiError(error);
+    } finally {
+      setExporting(false);
     }
   };
 
@@ -71,6 +91,24 @@ export default function ContactsPage() {
     },
   ];
 
+  const extraToolbar = (
+    <Space>
+      <Button
+        icon={<UploadOutlined />}
+        onClick={() => setImportOpen(true)}
+      >
+        {t('importTitle')}
+      </Button>
+      <Button
+        icon={<DownloadOutlined />}
+        loading={exporting}
+        onClick={handleExport}
+      >
+        {tCommon('export')} CSV
+      </Button>
+    </Space>
+  );
+
   return (
     <div>
       <div style={{ marginBottom: 24 }}>
@@ -97,6 +135,7 @@ export default function ContactsPage() {
         onAdd={() => { setEditingContact(null); setModalOpen(true); }}
         onEdit={(record) => { setEditingContact(record); setModalOpen(true); }}
         onRemove={handleDelete}
+        extraToolbar={extraToolbar}
       />
 
       <ContactModal
@@ -105,6 +144,15 @@ export default function ContactsPage() {
         onClose={() => setModalOpen(false)}
         onSuccess={() => {
           setModalOpen(false);
+          mutate();
+        }}
+      />
+
+      <ImportContactsModal
+        open={importOpen}
+        onClose={() => setImportOpen(false)}
+        onSuccess={() => {
+          setImportOpen(false);
           mutate();
         }}
       />

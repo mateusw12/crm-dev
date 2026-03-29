@@ -34,7 +34,8 @@
     "value": "Value",
     "title": "Title",
     "createdAt": "Created At",
-    "updatedAt": "Updated At"
+    "updatedAt": "Updated At",
+    "export": "Export"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -63,7 +64,13 @@
     "wonValue": "Won Value",
     "conversionRate": "Conversion Rate",
     "overdueTasks": "Overdue Tasks",
-    "dealsByStatus": "Deals by Status"
+    "dealsByStatus": "Deals by Status",
+    "salesFunnel": "Sales Funnel",
+    "reports": "Period Report",
+    "reportWon": "Won",
+    "reportLost": "Lost",
+    "reportOpen": "Open",
+    "noData": "No data to display"
   },
   "contacts": {
     "title": "Contacts",
@@ -74,7 +81,23 @@
     "company": "Company",
     "interactions": "Interactions",
     "deals": "Deals",
-    "tasks": "Tasks"
+    "tasks": "Tasks",
+    "importTitle": "Import Contacts",
+    "importStepUpload": "File",
+    "importStepMap": "Map Columns",
+    "importStepPreview": "Preview",
+    "importDragText": "Click or drag a CSV file here",
+    "importDragHint": "Only .csv files are supported",
+    "importRowsFound": "rows found",
+    "importSystemField": "System field",
+    "importCsvColumn": "CSV column",
+    "importSelectColumn": "Select a column",
+    "importValidate": "Validate",
+    "importConfirm": "Import",
+    "importTotal": "Total",
+    "importValid": "Valid",
+    "importInvalid": "With errors",
+    "importPartialWarning": "Only valid rows will be imported."
   },
   "companies": {
     "title": "Companies",

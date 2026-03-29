@@ -1,4 +1,5 @@
 import { http } from '../api';
+import httpClient from '../api/http-client';
 import type {
   CreateCompanyDto,
   UpdateCompanyDto,
@@ -11,6 +12,15 @@ import type {
 } from '../dto';
 
 const API_BASE = '/companies';
+
+function downloadBlob(data: Blob, filename: string, mimeType: string) {
+  const url = URL.createObjectURL(new Blob([data], { type: mimeType }));
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
 
 export class CompaniesService {
   static async getAll(params?: GetCompaniesParams) {
@@ -35,5 +45,12 @@ export class CompaniesService {
 
   static async lookupCep(cep: string) {
     return http.get<CepResponse>(`${API_BASE}/cep/${cep.replace(/\D/g, '')}`);
+  }
+
+  static async exportCsv() {
+    const res = await httpClient.get(`${API_BASE}/export/csv`, {
+      responseType: 'blob',
+    });
+    downloadBlob(res.data, 'companies.csv', 'text/csv;charset=utf-8');
   }
 }

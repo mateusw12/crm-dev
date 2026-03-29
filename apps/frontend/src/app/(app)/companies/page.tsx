@@ -1,7 +1,8 @@
 'use client';
 
 import { useState } from 'react';
-import { Typography } from 'antd';
+import { Button, Typography } from 'antd';
+import { DownloadOutlined } from '@ant-design/icons';
 import type { TableColumnsType } from 'antd';
 import { useTranslations } from 'next-intl';
 import useSWR from 'swr';
@@ -18,6 +19,7 @@ export default function CompaniesPage() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingCompany, setEditingCompany] = useState<CompanyResponse | null>(null);
   const [page, setPage] = useState(1);
+  const [exporting, setExporting] = useState(false);
 
   const { data, isLoading, mutate } = useSWR(
     ['companies', page],
@@ -32,6 +34,17 @@ export default function CompaniesPage() {
       mutate();
     } catch (error) {
       handleApiError(error);
+    }
+  };
+
+  const handleExport = async () => {
+    setExporting(true);
+    try {
+      await CompaniesService.exportCsv();
+    } catch (error) {
+      handleApiError(error);
+    } finally {
+      setExporting(false);
     }
   };
 
@@ -81,6 +94,11 @@ export default function CompaniesPage() {
         onAdd={() => { setEditingCompany(null); setModalOpen(true); }}
         onEdit={(record) => { setEditingCompany(record); setModalOpen(true); }}
         onRemove={handleRemove}
+        extraToolbar={
+          <Button icon={<DownloadOutlined />} loading={exporting} onClick={handleExport}>
+            {tCommon('export')} CSV
+          </Button>
+        }
       />
 
       <CompanyModal

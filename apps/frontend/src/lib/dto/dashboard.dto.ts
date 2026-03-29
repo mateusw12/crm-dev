@@ -16,3 +16,12 @@ export interface DashboardKpisResponse {
   overdueTasks: number;
   dealsByStatus: DealsByStatusItem[];
 }
+
+export interface DashboardReportsResponse {
+  period: { from: string; to: string };
+  total: { count: number; value: number };
+  won: { count: number; value: number };
+  lost: { count: number; value: number };
+  open: { count: number; value: number };
+  dealsByStatus: DealsByStatusItem[];
+}

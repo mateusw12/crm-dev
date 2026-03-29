@@ -34,7 +34,8 @@
     "value": "Valor",
     "title": "Título",
     "createdAt": "Criado em",
-    "updatedAt": "Atualizado em"
+    "updatedAt": "Atualizado em",
+    "export": "Exportar"
   },
   "nav": {
     "dashboard": "Dashboard",
@@ -63,7 +64,13 @@
     "wonValue": "Valor Ganho",
     "conversionRate": "Taxa de Conversão",
     "overdueTasks": "Tarefas Atrasadas",
-    "dealsByStatus": "Negócios por Status"
+    "dealsByStatus": "Negócios por Status",
+    "salesFunnel": "Funil de Vendas",
+    "reports": "Relatório por Período",
+    "reportWon": "Ganhos",
+    "reportLost": "Perdidos",
+    "reportOpen": "Em Aberto",
+    "noData": "Sem dados para exibir"
   },
   "contacts": {
     "title": "Contatos",
@@ -74,7 +81,23 @@
     "company": "Empresa",
     "interactions": "Interações",
     "deals": "Negócios",
-    "tasks": "Tarefas"
+    "tasks": "Tarefas",
+    "importTitle": "Importar Contatos",
+    "importStepUpload": "Arquivo",
+    "importStepMap": "Mapear Colunas",
+    "importStepPreview": "Pré-visualização",
+    "importDragText": "Clique ou arraste um arquivo CSV",
+    "importDragHint": "Somente arquivos .csv são suportados",
+    "importRowsFound": "linhas encontradas",
+    "importSystemField": "Campo do sistema",
+    "importCsvColumn": "Coluna do CSV",
+    "importSelectColumn": "Selecione uma coluna",
+    "importValidate": "Validar",
+    "importConfirm": "Importar",
+    "importTotal": "Total",
+    "importValid": "Válidos",
+    "importInvalid": "Com erro",
+    "importPartialWarning": "Apenas as linhas válidas serão importadas."
   },
   "companies": {
     "title": "Empresas",

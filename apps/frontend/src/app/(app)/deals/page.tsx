@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { Button, Typography, Spin } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { Button, Typography, Spin, Space } from "antd";
+import { PlusOutlined, DownloadOutlined } from "@ant-design/icons";
 import { useTranslations } from "next-intl";
 import useSWR from "swr";
 import {
@@ -44,15 +44,28 @@ const STATUS_COLORS: Record<DealStatus, string> = {
 
 export default function DealsPage() {
   const t = useTranslations("deals");
+  const tCommon = useTranslations("common");
   const [modalOpen, setModalOpen] = useState(false);
   const [editingDeal, setEditingDeal] = useState<DealResponse | null>(null);
   const [activeDeal, setActiveDeal] = useState<DealResponse | null>(null);
+  const [exporting, setExporting] = useState(false);
 
   const {
     data: deals = [],
     isLoading,
     mutate,
   } = useSWR<DealResponse[]>("deals", () => DealsService.getAll());
+
+  const handleExport = async () => {
+    setExporting(true);
+    try {
+      await DealsService.exportCsv();
+    } catch (error) {
+      handleApiError(error);
+    } finally {
+      setExporting(false);
+    }
+  };
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
@@ -119,16 +132,25 @@ export default function DealsPage() {
         <Title level={3} style={{ margin: 0 }}>
           {t("title")}
         </Title>
-        <Button
-          type="primary"
-          icon={<PlusOutlined />}
-          onClick={() => {
-            setEditingDeal(null);
-            setModalOpen(true);
-          }}
-        >
-          {t("new")}
-        </Button>
+        <Space>
+          <Button
+            icon={<DownloadOutlined />}
+            loading={exporting}
+            onClick={handleExport}
+          >
+            {tCommon("export")} CSV
+          </Button>
+          <Button
+            type="primary"
+            icon={<PlusOutlined />}
+            onClick={() => {
+              setEditingDeal(null);
+              setModalOpen(true);
+            }}
+          >
+            {t("new")}
+          </Button>
+        </Space>
       </div>
 
       <DndContext
