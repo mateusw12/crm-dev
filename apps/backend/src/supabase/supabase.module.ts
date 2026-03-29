@@ -11,15 +11,25 @@ export const SUPABASE_CLIENT = 'SUPABASE_CLIENT';
     {
       provide: SUPABASE_CLIENT,
       inject: [ConfigService],
-      useFactory: (configService: ConfigService): SupabaseClient => {
+      useFactory: async (configService: ConfigService): Promise<SupabaseClient> => {
         const url = configService.get<string>('SUPABASE_URL');
         const key = configService.get<string>('SUPABASE_SERVICE_ROLE_KEY');
         if (!url || !key) {
           throw new Error('Missing Supabase configuration');
         }
-        return createClient(url, key, {
+        const client = createClient(url, key, {
           auth: { persistSession: false },
         });
+
+        // Verify connection by doing a lightweight query
+        const { error } = await client.from('users').select('id').limit(1);
+        if (error) {
+          console.error('[Supabase] Connection test failed:', error.message);
+        } else {
+          console.log('[Supabase] Connection successful ✓');
+        }
+
+        return client;
       },
     },
   ],
