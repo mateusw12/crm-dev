@@ -1,9 +1,9 @@
-export { AuthService } from './auth.service';
-export { CompaniesService } from './companies.service';
-export { ContactsService } from './contacts.service';
-export { DashboardService } from './dashboard.service';
-export { DealsService } from './deals.service';
-export { GroupsService } from './groups.service';
-export { InteractionsService } from './interactions.service';
-export { NotificationsService } from './notifications.service';
-export { TasksService } from './tasks.service';
+export * from "./companies.service";
+export * from "./contacts.service";
+export * from "./deals.service";
+export * from "./interactions.service";
+export * from "./tasks.service";
+export * from "./dashboard.service";
+export * from "./notifications.service";
+export * from "./groups.service";
+export * from "./auth.service";
