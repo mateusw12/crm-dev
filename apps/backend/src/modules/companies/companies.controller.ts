@@ -8,7 +8,9 @@ import {
   Body,
   Query,
   UseGuards,
+  Res,
 } from "@nestjs/common";
+import { Response } from "express";
 import { CompaniesService } from "./companies.service";
 import { CreateCompanyDto } from "./dto/create-company.dto";
 import { UpdateCompanyDto } from "./dto/update-company.dto";
@@ -73,5 +75,16 @@ export class CompaniesController {
   @ApiOperation({ summary: "Delete a company by ID" })
   remove(@Param("id") id: string) {
     return this.companiesService.remove(id);
+  }
+
+  @Get("export/csv")
+  @ApiOperation({ summary: "Export all companies as CSV" })
+  async exportCsv(@User() user: AuthenticatedUser, @Res() res: Response) {
+    const buffer = await this.companiesService.exportAll(user);
+    res.set({
+      "Content-Type": "text/csv; charset=utf-8",
+      "Content-Disposition": 'attachment; filename="companies.csv"',
+    });
+    res.send(buffer);
   }
 }

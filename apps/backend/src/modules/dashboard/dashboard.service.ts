@@ -48,4 +48,31 @@ export class DashboardService {
       dealsByStatus,
     };
   }
+
+  async getReports(currentUser: AuthenticatedUser, from: string, to: string) {
+    const deals = await this.dashboardRepository.getReportData(currentUser, from, to);
+
+    const won = deals.filter((d) => d.status === DealStatus.WON);
+    const lost = deals.filter((d) => d.status === DealStatus.LOST);
+    const open = deals.filter(
+      (d) => d.status !== DealStatus.WON && d.status !== DealStatus.LOST,
+    );
+
+    const sum = (arr: any[]) => arr.reduce((acc, d) => acc + (d.value ?? 0), 0);
+
+    const dealsByStatus = Object.values(DealStatus).map((status) => ({
+      status,
+      count: deals.filter((d) => d.status === status).length,
+      value: sum(deals.filter((d) => d.status === status)),
+    }));
+
+    return {
+      period: { from, to },
+      total: { count: deals.length, value: sum(deals) },
+      won: { count: won.length, value: sum(won) },
+      lost: { count: lost.length, value: sum(lost) },
+      open: { count: open.length, value: sum(open) },
+      dealsByStatus,
+    };
+  }
 }

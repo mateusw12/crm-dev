@@ -28,4 +28,17 @@ export class DashboardRepository {
 
     return { contacts, deals, tasks, wonDeals, lostDeals };
   }
+
+  async getReportData(currentUser: AuthenticatedUser, from: string, to: string) {
+    const tenantFilter = this.getTenantFilter(currentUser);
+    const { data, error } = await this.supabase
+      .from('deals')
+      .select('id, value, status, created_at')
+      .match(tenantFilter)
+      .gte('created_at', from)
+      .lte('created_at', to)
+      .order('created_at', { ascending: false });
+    if (error) throw error;
+    return data ?? [];
+  }
 }

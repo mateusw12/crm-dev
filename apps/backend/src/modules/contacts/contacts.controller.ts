@@ -8,10 +8,13 @@ import {
   Body,
   Query,
   UseGuards,
+  Res,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { ContactsService } from './contacts.service';
 import { CreateContactDto } from './dto/create-contact.dto';
 import { UpdateContactDto } from './dto/update-contact.dto';
+import { ImportContactRowDto } from './dto/import-contact-row.dto';
 import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard';
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { User } from '../../common/decorators/current-user.decorator';
@@ -62,5 +65,34 @@ export class ContactsController {
   @ApiOperation({ summary: 'Delete contact by ID' })
   remove(@Param('id') id: string, @User() user: AuthenticatedUser) {
     return this.contactsService.remove(id, user);
+  }
+
+  @Get('export/csv')
+  @ApiOperation({ summary: 'Export all contacts as CSV' })
+  async exportCsv(@User() user: AuthenticatedUser, @Res() res: Response) {
+    const buffer = await this.contactsService.exportAll(user);
+    res.set({
+      'Content-Type': 'text/csv; charset=utf-8',
+      'Content-Disposition': 'attachment; filename="contacts.csv"',
+    });
+    res.send(buffer);
+  }
+
+  @Post('import/preview')
+  @ApiOperation({ summary: 'Validate rows before bulk import' })
+  importPreview(
+    @Body() body: { rows: any[] },
+    @User() user: AuthenticatedUser,
+  ) {
+    return this.contactsService.previewImport(body.rows, user);
+  }
+
+  @Post('import/confirm')
+  @ApiOperation({ summary: 'Bulk import contacts after validation' })
+  importConfirm(
+    @Body() body: { rows: ImportContactRowDto[] },
+    @User() user: AuthenticatedUser,
+  ) {
+    return this.contactsService.confirmImport(body.rows, user);
   }
 }

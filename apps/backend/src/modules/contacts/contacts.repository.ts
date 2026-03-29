@@ -43,4 +43,20 @@ export class ContactsRepository extends BaseRepository {
   async findDetail(id: string) {
     return this.findById(id, '*, companies(id, name), interactions(*), deals(*), tasks(*)');
   }
+
+  async findAllForExport(currentUser: AuthenticatedUser) {
+    let query = this.query('id, name, email, phone, notes, created_at, companies(name)')
+      .order('created_at', { ascending: false });
+
+    if (currentUser.role === UserRole.USER) query = query.eq('created_by', currentUser.id);
+    else if (currentUser.role === UserRole.MANAGER)
+      query = query.eq('tenant_id', currentUser.tenantId ?? currentUser.id);
+
+    const { data, error } = await query;
+    if (error) throw error;
+    return (data ?? []).map((c: any) => ({
+      ...c,
+      company: c.companies?.name ?? '',
+    }));
+  }
 }

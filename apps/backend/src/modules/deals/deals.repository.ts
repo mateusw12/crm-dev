@@ -33,4 +33,36 @@ export class DealsRepository extends BaseRepository {
   async findWithRelations(id: string) {
     return this.findById(id, '*, contacts(id, name), tasks(*)');
   }
+
+  async findAllForExport(currentUser: AuthenticatedUser) {
+    let query = this.query('id, title, value, status, created_at, contacts(name)')
+      .order('created_at', { ascending: false });
+
+    if (currentUser.role === UserRole.USER) query = query.eq('created_by', currentUser.id);
+    else if (currentUser.role === UserRole.MANAGER)
+      query = query.eq('tenant_id', currentUser.tenantId ?? currentUser.id);
+
+    const { data, error } = await query;
+    if (error) throw error;
+    return (data ?? []).map((d: any) => ({ ...d, contact: d.contacts?.name ?? '' }));
+  }
+
+  async findByPeriod(
+    currentUser: AuthenticatedUser,
+    from: string,
+    to: string,
+  ) {
+    let query = this.query('id, title, value, status, created_at')
+      .gte('created_at', from)
+      .lte('created_at', to)
+      .order('created_at', { ascending: false });
+
+    if (currentUser.role === UserRole.USER) query = query.eq('created_by', currentUser.id);
+    else if (currentUser.role === UserRole.MANAGER)
+      query = query.eq('tenant_id', currentUser.tenantId ?? currentUser.id);
+
+    const { data, error } = await query;
+    if (error) throw error;
+    return data ?? [];
+  }
 }

@@ -8,7 +8,9 @@ import {
   Body,
   Query,
   UseGuards,
+  Res,
 } from '@nestjs/common';
+import { Response } from 'express';
 import { DealsService } from './deals.service';
 import { CreateDealDto } from './dto/create-deal.dto';
 import { UpdateDealDto } from './dto/update-deal.dto';
@@ -60,5 +62,26 @@ export class DealsController {
   @ApiOperation({ summary: 'Delete deal by ID' })
   remove(@Param('id') id: string, @User() user: AuthenticatedUser) {
     return this.dealsService.remove(id, user);
+  }
+
+  @Get('export/csv')
+  @ApiOperation({ summary: 'Export all deals as CSV' })
+  async exportCsv(@User() user: AuthenticatedUser, @Res() res: Response) {
+    const buffer = await this.dealsService.exportAll(user);
+    res.set({
+      'Content-Type': 'text/csv; charset=utf-8',
+      'Content-Disposition': 'attachment; filename="deals.csv"',
+    });
+    res.send(buffer);
+  }
+
+  @Get('reports')
+  @ApiOperation({ summary: 'Get deals report for a period' })
+  getReports(
+    @User() user: AuthenticatedUser,
+    @Query('from') from: string,
+    @Query('to') to: string,
+  ) {
+    return this.dealsService.getReports(user, from, to);
   }
 }

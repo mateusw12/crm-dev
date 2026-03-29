@@ -41,6 +41,19 @@ export class CompaniesRepository extends BaseRepository {
     return this.findById(id, '*, contacts(*)');
   }
 
+  async findAllForExport(currentUser: AuthenticatedUser) {
+    let query = this.query('id, name, cnpj, industry, phone, website, notes, created_at')
+      .order('created_at', { ascending: false });
+
+    if (currentUser.role === UserRole.USER) query = query.eq('created_by', currentUser.id);
+    else if (currentUser.role === UserRole.MANAGER)
+      query = query.eq('tenant_id', currentUser.tenantId ?? currentUser.id);
+
+    const { data, error } = await query;
+    if (error) throw error;
+    return data ?? [];
+  }
+
   async findByCnpjInTenant(cnpjDigits: string, tenantId: string, excludeId?: string) {
     let query = this.query('id')
       .eq('cnpj', cnpjDigits)

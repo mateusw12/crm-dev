@@ -5,6 +5,7 @@ import { UpdateCompanyDto } from './dto/update-company.dto';
 import { CompaniesRepository } from './companies.repository';
 import { BrasilApiService } from '../brasilapi/brasilapi.service';
 import { cleanCnpj } from '../../utils';
+import { buildCsv } from '../../common/utils/export.util';
 
 @Injectable()
 export class CompaniesService {
@@ -77,5 +78,18 @@ export class CompaniesService {
 
   async lookupCnpj(cnpj: string) {
     return this.brasilApiService.lookupCnpj(cnpj);
+  }
+
+  async exportAll(currentUser: AuthenticatedUser): Promise<Buffer> {
+    const data = await this.companiesRepository.findAllForExport(currentUser);
+    return buildCsv(data, [
+      { header: 'Name', key: 'name' },
+      { header: 'CNPJ', key: 'cnpj' },
+      { header: 'Industry', key: 'industry' },
+      { header: 'Phone', key: 'phone' },
+      { header: 'Website', key: 'website' },
+      { header: 'Notes', key: 'notes' },
+      { header: 'Created At', key: 'created_at' },
+    ]);
   }
 }

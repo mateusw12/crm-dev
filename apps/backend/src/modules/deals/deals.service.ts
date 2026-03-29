@@ -3,6 +3,7 @@ import { AuthenticatedUser, UserRole, DealStatus } from '../../common/types';
 import { CreateDealDto } from './dto/create-deal.dto';
 import { UpdateDealDto } from './dto/update-deal.dto';
 import { DealsRepository } from './deals.repository';
+import { buildCsv } from '../../common/utils/export.util';
 
 @Injectable()
 export class DealsService {
@@ -59,5 +60,45 @@ export class DealsService {
       return;
     if (deal.created_by === currentUser.id) return;
     throw new ForbiddenException('error.accessDenied');
+  }
+
+  async exportAll(currentUser: AuthenticatedUser): Promise<Buffer> {
+    const data = await this.dealsRepository.findAllForExport(currentUser);
+    return buildCsv(data, [
+      { header: 'Title', key: 'title' },
+      { header: 'Status', key: 'status' },
+      { header: 'Value', key: 'value' },
+      { header: 'Contact', key: 'contact' },
+      { header: 'Created At', key: 'created_at' },
+    ]);
+  }
+
+  async getReports(
+    currentUser: AuthenticatedUser,
+    from: string,
+    to: string,
+  ) {
+    const deals = await this.dealsRepository.findByPeriod(currentUser, from, to);
+
+    const won = deals.filter((d) => d.status === DealStatus.WON);
+    const lost = deals.filter((d) => d.status === DealStatus.LOST);
+    const open = deals.filter((d) => d.status !== DealStatus.WON && d.status !== DealStatus.LOST);
+
+    const sum = (arr: any[]) => arr.reduce((acc, d) => acc + (d.value ?? 0), 0);
+
+    const dealsByStatus = Object.values(DealStatus).map((status) => ({
+      status,
+      count: deals.filter((d) => d.status === status).length,
+      value: sum(deals.filter((d) => d.status === status)),
+    }));
+
+    return {
+      period: { from, to },
+      total: { count: deals.length, value: sum(deals) },
+      won: { count: won.length, value: sum(won) },
+      lost: { count: lost.length, value: sum(lost) },
+      open: { count: open.length, value: sum(open) },
+      dealsByStatus,
+    };
   }
 }
